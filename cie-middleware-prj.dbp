@@ -11,9 +11,9 @@ Description: CIE Middleware
 <</CTRL>>
 <<FILES>>
 1
-/home/ugos/Desktop/cie-middleware-linux/CIEID/libcie-pkcs11.so* -> libcie-pkcs11.so -> /usr/local/lib
-/home/ugos/Desktop/cie-middleware-linux/CIEID/logo_circle.png -> logo_circle.png -> /usr/share/CIEID/
-/home/ugos/Desktop/cie-middleware-linux/CIEID/cieid.jar -> cieid.jar -> /usr/share/CIEID/
+/home/piero/Scrivania/cie-middleware-linux/build/libcie-pkcs11.so* -> libcie-pkcs11.so -> /usr/local/lib
+/home/piero/Scrivania/cie-middleware-linux/build/logo_circle.png -> logo_circle.png -> /usr/share/CIEID/
+/home/piero/Scrivania/cie-middleware-linux/build/cieid.jar -> cieid.jar -> /usr/share/CIEID/
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>

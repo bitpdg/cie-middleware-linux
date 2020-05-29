@@ -27,3 +27,4 @@ cp -p %{_sourcedir}/libcie-pkcs11.so %{buildroot}/usr/local/lib
 %changelog
 	
 
+
