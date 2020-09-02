@@ -202,8 +202,10 @@ public class MainFrame extends JFrame {
 		btnCambiaPin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectButton(btnCambiaPin);
+				oldpin.setText("");
+			    newpin1.setText("");
+			    newpin2.setText("");
 				tabbedPane.setSelectedIndex(3);
-				
 			}
 		});
 		btnCambiaPin.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Risorsa 24.png")));
@@ -217,6 +219,9 @@ public class MainFrame extends JFrame {
 		btnSbloccaCarta.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectButton(btnSbloccaCarta);
+				pin01.setText("");
+				pin02.setText("");
+				puk01.setText("");
 				tabbedPane.setSelectedIndex(5);
 			}
 		});
@@ -888,7 +893,7 @@ public class MainFrame extends JFrame {
 		MiniWebView webView = new MiniWebView();
 		webView.setBounds(12, 99, 571, 362);
 		panel_8.add(webView);
-		webView.showPage("https://idserver.servizicie.interno.gov.it/idp/tutorial_win.jsp");
+		webView.showPage("https://idserver.servizicie.interno.gov.it/idp/tutorial/computer/lettoreusb/linux/tutorial_linux_firefox.jsp");
 
 		panel_9 = new JPanel();
 		panel_9.setLayout(null);
