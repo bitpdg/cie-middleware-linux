@@ -4,12 +4,18 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -32,6 +38,12 @@ import javax.swing.text.StyledDocument;
 import com.ugos.util.Runner;
 
 import it.ipzs.cieid.util.Utils;
+import it.ipzs.carousel.*;
+import java.awt.FlowLayout;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 public class MainFrame extends JFrame {
 
@@ -137,6 +149,12 @@ public class MainFrame extends JFrame {
 	private JPanel panel_10;
 	private JLabel lblInformazioni;
 	private MiniWebView miniWebView_1;
+	private JPanel btnPanel;
+	private JButton btnRemoveAll;
+	private JButton btnRemoveSelected;
+	private JButton btnNewButton;
+	private carousel cieCarousel;
+	private Map<String, Cie> cieDictionary;
 	/**
 	 * Launch the application.
 	 */
@@ -191,6 +209,7 @@ public class MainFrame extends JFrame {
 				selectHome();
 			}
 		});
+		
 		btnHome.setBackground(SystemColor.LIGHT_GRAY);
 		btnHome.setHorizontalAlignment(SwingConstants.LEFT);
 		btnHome.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Risorsa 25.png")));
@@ -278,6 +297,7 @@ public class MainFrame extends JFrame {
 		tabbedPane.setBounds(200, -50, 600, 630);
 		contentPane.add(tabbedPane);
 		
+			
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("New tab", null, panel_1, null);
 		panel_1.setLayout(null);
@@ -540,6 +560,79 @@ public class MainFrame extends JFrame {
 		progressBar.setBounds(258, 324, 293, 14);
 		panel_2.add(progressBar);
 		
+		
+		panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBackground(Color.WHITE);
+
+		tabbedPane.addTab("New tab", null, panel_3, null);
+		cieCarousel = new carousel();
+		cieCarousel.setSize(595, 307);
+		cieCarousel.setLocation(0, 190);
+		panel_3.add(cieCarousel);
+		
+		btnPanel = new JPanel();
+		btnPanel.setBounds(0, 520, 595, 65);
+		btnPanel.setBackground(Color.WHITE);
+		btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 5));
+		
+		btnRemoveAll = new JButton("Rimuovi tutte");
+		btnRemoveAll.setForeground(Color.WHITE);
+		btnRemoveAll.setBackground(new Color(30, 144, 255));
+		btnRemoveAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+					
+						List<Cie> cieList= new ArrayList<Cie>(cieDictionary.values());
+						
+						disabilitaAllCIE(cieList);
+				}
+		});
+		
+		btnPanel.add(btnRemoveAll);		
+		
+		btnRemoveSelected = new JButton("Rimuovi carta selezionata");
+		btnRemoveSelected.setForeground(Color.WHITE);
+		btnRemoveSelected.setBackground(new Color(30, 144, 255));
+		btnRemoveSelected.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Cie cieToDelete = cieCarousel.getCardAtIndex();
+					disabilitaCIE(cieToDelete.getPan(), cieToDelete.getSerialNumber());	
+
+			}
+		});
+		
+		btnPanel.add(btnRemoveSelected);
+		
+		btnNewButton = new JButton("Aggiungi carta");
+		btnNewButton.setForeground(Color.WHITE);
+		btnNewButton.setBackground(new Color(30, 144, 255));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(0);
+				//abbinaCIE();
+			}
+		});
+		btnPanel.add(btnNewButton);
+
+		panel_3.add(btnPanel);
+		
+		lblCieId = new JLabel("CIE ID");
+		lblCieId.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCieId.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblCieId.setBounds(147, 36, 299, 36);
+		panel_3.add(lblCieId);
+		
+		txtpnCieAbbinataCon = new JTextPane();
+		txtpnCieAbbinataCon.setFont(new Font("Dialog", Font.PLAIN, 16));
+		txtpnCieAbbinataCon.setText("Carta di identità elettronica abbinata correttamente");
+		txtpnCieAbbinataCon.setEditable(false);
+		txtpnCieAbbinataCon.setBounds(63, 84, 492, 46);
+		panel_3.add(txtpnCieAbbinataCon);
+		
+		
+
+		
+		/*
 		panel_3 = new JPanel();
 		panel_3.setLayout(null);
 		panel_3.setBackground(Color.WHITE);
@@ -603,6 +696,8 @@ public class MainFrame extends JFrame {
 		labelCardholder.setFont(new Font("Dialog", Font.BOLD, 16));
 		labelCardholder.setBounds(252, 318, 299, 36);
 		panel_3.add(labelCardholder);
+		*/
+		
 		
 		panel_4 = new JPanel();
 		panel_4.setLayout(null);
@@ -1052,9 +1147,14 @@ public class MainFrame extends JFrame {
 							@Override
 							public void invoke(String pan, String cardholder, String ef_seriale) {
 								// TODO Auto-generated method stub
+								/*
 								MainFrame.this.serialNumber = pan;
 								MainFrame.this.cardHolder = cardholder;
 								MainFrame.this.ef_seriale = ef_seriale;
+								*/
+								System.out.println("Pan: "+ pan + "ef seriale " +  ef_seriale);
+								Cie newCie = new Cie(pan, cardholder, ef_seriale);
+								cieDictionary.put(pan, newCie);
 							}
 						};
 					
@@ -1097,13 +1197,13 @@ public class MainFrame extends JFrame {
 
 			                        case CKR_OK:
 			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "L'abilitazione della CIE è avvennuta con successo", "CIE abilitata", JOptionPane.INFORMATION_MESSAGE);                        	
-			                            labelSerial.setText(MainFrame.this.ef_seriale);
-			                            labelCardholder.setText(cardHolder);
+			              
+			                        	Gson gson = new Gson();
+			                        	String serialDictionary = gson.toJson(cieDictionary);
+			                        	Utils.setProperty("cieDictionary", serialDictionary);			                            
 			                            
-			                            Utils.setProperty("serialnumber", serialNumber);
-			                            Utils.setProperty("cardholder", cardHolder);
-			                            Utils.setProperty("ef_seriale", ef_seriale);
-			                            
+			                        	cieCarousel.configureCards(cieDictionary);
+			                        	
 			                            selectCardholder();	                            
 			                            break;
 			                    }	                
@@ -1484,41 +1584,75 @@ public class MainFrame extends JFrame {
 				
 			}
 		});
-		
-        
 	}
 	
-	private void disabilitaCIE()
+	private void disabilitaCIE(String pan, String efSeriale)
 	{
-		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Vuoi disabilitare la CIE", "Disabilita CIE", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+		
+		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Vuoi disabilitare la CIE numero " + efSeriale + "?" , "Disabilita CIE", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
 			return;
 		
-		int ret = Middleware.INSTANCE.DisabilitaCIE(Utils.getProperty("serialnumber", ""));
+		int ret = Middleware.INSTANCE.DisabilitaCIE(pan);
         
         switch (ret)
         {
             case CKR_OK:
-                tabbedPane.setSelectedIndex(0);
+                
+            	cieDictionary.remove(pan);
+                
                 JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "CIE disabilitata con successo", "CIE disabilitata", JOptionPane.INFORMATION_MESSAGE);
-                labelSerial.setText("");                
-                labelCardholder.setText("");
-                Utils.setProperty("serialnumber", "");
-                Utils.setProperty("cardholder", "");  
-                Utils.setProperty("ef_seriale", "");
+                
+            	Gson gson = new Gson();
+				String stringDictionary = gson.toJson(cieDictionary);
+				Utils.setProperty("cieDictionary", stringDictionary);
+
+				selectHome();
                 break;
-
-//            case CKR_TOKEN_NOT_PRESENT:
-//            	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "CIE non presente sul lettore", "Disabilitazione CIE", JOptionPane.ERROR_MESSAGE);
-//                break;
-
             default:
-            	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Impossibile disabilitare la CIE", "CIE non disabilitata", JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Impossibile disabilitare la CIE numero " + efSeriale, "CIE non disabilitata", JOptionPane.ERROR_MESSAGE);
                 break;
         }
 	}
-	private void selectHome()
+	
+	private void disabilitaAllCIE(List<Cie> cieList)
 	{
 		
+		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Vuoi disabilitare tutte le Cie attualmente abbinate?", "Disabilita CIE", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+			return;
+		
+				
+		for(int i = 0; i<cieList.size(); i++)
+		{
+			
+			int ret = Middleware.INSTANCE.DisabilitaCIE(cieList.get(i).getPan());
+	        
+	        switch (ret)
+	        {
+	            case CKR_OK:
+	                
+	            	cieDictionary.remove(cieList.get(i).getPan());
+	                	                
+	            	Gson gson = new Gson();
+					String stringDictionary = gson.toJson(cieDictionary);
+					Utils.setProperty("cieDictionary", stringDictionary);
+					
+	                break;
+	            default:
+	            	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Impossibile disabilitare la CIE numero " + cieList.get(i).getSerialNumber(), "CIE non disabilitata", JOptionPane.ERROR_MESSAGE);
+	                break;
+	        }
+		}
+		
+
+        JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "CIE disabilitata con successo", "CIE disabilitata", JOptionPane.INFORMATION_MESSAGE);
+		
+		selectHome();
+
+	}
+	
+	private void selectHome()
+	{
+		/*
 		if(Utils.getProperty("ef_seriale", "").equals("") && !Utils.getProperty("cardholder", "").equals("") )
 		{
 			
@@ -1552,6 +1686,51 @@ public class MainFrame extends JFrame {
 					passwordField.requestFocus();
 				}
 	        });
+		}*/
+		        
+		//Utils.setProperty("cieDictionary", "");
+		
+		if(!Utils.getProperty("serialnumber", "").equals(""))
+		{
+            String serialNumber = Utils.getProperty("serialnumber", "");
+            String cardholder = Utils.getProperty("cardholder", "");
+            String efSeriale = Utils.getProperty("ef_seriale", "");
+            
+            cieDictionary = new HashMap<String, Cie>();
+            cieDictionary.put(serialNumber, new Cie(serialNumber, cardholder, efSeriale));
+            
+            /**********/
+        	Gson gson = new Gson();
+			String stringDictionary = gson.toJson(cieDictionary);
+			Utils.setProperty("cieDictionary", stringDictionary);
+			/***********/
+			
+			cieCarousel.configureCards(cieDictionary);
+			tabbedPane.setSelectedIndex(2);
+            
+		}else 
+		{
+			if(!Utils.getProperty("cieDictionary", "").equals("") && !Utils.getProperty("cieDictionary", "").equals("{}"))
+			{
+				Gson gson = new Gson();
+				java.lang.reflect.Type type = new TypeToken<HashMap<String, Cie>>(){}.getType();
+				cieDictionary = gson.fromJson(Utils.getProperty("cieDictionary", ""), type);
+				//cieDictionary.remove("");
+				cieCarousel.configureCards(cieDictionary);
+				tabbedPane.setSelectedIndex(2);
+			}else
+			{
+				cieDictionary = new HashMap<String, Cie>();
+				
+				tabbedPane.setSelectedIndex(0);
+				EventQueue.invokeLater(new Runnable() 
+		        {
+					public void run() 
+					{
+						passwordField.requestFocus();
+					}
+		        });
+			}
 		}
 		
 		selectButton(btnHome);
