@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 
 public class carousel extends JPanel {
 
@@ -79,67 +80,63 @@ public class carousel extends JPanel {
 		this.setLayout(null);
 		
 		cieLeft = new CieCard(CieCard.Size.CarouselSizeSmall);
+		cieLeft.getLblName().setFont(new Font("Dialog", Font.PLAIN, 9));
+		cieLeft.getLblName().setLocation(29, 140);
+		cieLeft.getLblNumberValue().setLocation(29, 113);
+		cieLeft.getLblCieImage().setSize(140, 86);
+		cieLeft.setSize(150, 158);
+		cieLeft.getLblCieImage().setLocation(5, 0);
 		//cieLeft.getLblNumberValue().setSize(116, 15);
 		//cieLeft.getLblName().setSize(116, 15);
 		//cieLeft.getLblName().setLocation(29, 143);
 		
-		//cieLeft.getLblCieImage().setSize(140, 80);
-		cieLeft.setLocation(52, 39);
-		
-		/*
-		cieLeft.getLblNumberValue().setText("111122223333");
-		cieLeft.getLblCieImage().setLocation(0, 11);
-		cieLeft.getLblCardNumber().setBounds(29, 102, 100, 15);
-		cieLeft.getLblCardNumber().setFont(new Font("Tahoma", Font.PLAIN, 8));
-		cieLeft.getLblName().setSize(122, 15);
-		cieLeft.getLblName().setFont(new Font("Tahoma", Font.BOLD, 9));
-		cieLeft.getLblIntestatario().setFont(new Font("Tahoma", Font.PLAIN, 8));
-		cieLeft.getLblName().setText("DATACARD QUATTRO");
-		cieLeft.getLblIntestatario().setLocation(29, 128);
-		cieLeft.getLblName().setLocation(29, 139);
-		cieLeft.getLblNumberValue().setLocation(29, 113);
-		*/
-		
-		//cieLeft.setSize(150, 158);
-		
-		
+	
+		cieLeft.setLocation(38, 50);
+			
 		cieRight = new CieCard(CieCard.Size.CarouselSizeSmall);
+		cieRight.getLblName().setFont(new Font("Dialog", Font.PLAIN, 9));
+		cieRight.getLblName().setLocation(29, 140);
+		cieRight.getLblNumberValue().setLocation(29, 113);
+		cieRight.getLblCieImage().setSize(140, 86);
+		cieRight.getLblCieImage().setLocation(5, 0);
 		//cieRight.getLblNumberValue().setBounds(29, 129, 100, -16);
 		//cieRight.getLblName().setSize(121, 15);
 		//cieRight.getLblName().setLocation(29, 143);
-		cieRight.setLocation(406, 39);
+		cieRight.setLocation(408, 50);
 		
 		cieCenter = new CieCard(CieCard.Size.CarouselSizeRegular);
-		cieCenter.getLblCieImage().setLocation(10, 11);
+		cieCenter.getLblIntestatario().setSize(111, 15);
 		
 		
 		cieCenter.getLblCardNumber().setLocation(46, 170);
-		cieCenter.getLblIntestatario().setLocation(46, 187);
-		cieCenter.getLblCieImage().setSize(196, 105);
+		cieCenter.getLblIntestatario().setLocation(35, 177);
+		cieCenter.getLblCieImage().setSize(220, 120);
 		cieCenter.getLblCieImage().setLocation(20, 11);
 		
 		cieCenter.getLblIntestatario().setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cieCenter.getLblCardNumber().setFont(new Font("Tahoma", Font.PLAIN, 12));
 		cieCenter.getLblName().setFont(new Font("Tahoma", Font.BOLD, 14));
 		cieCenter.getLblNumberValue().setFont(new Font("Tahoma", Font.BOLD, 14));
-		cieCenter.getLblName().setSize(190, 25);
-		cieCenter.getLblName().setLocation(46, 199);
-		cieCenter.getLblIntestatario().setLocation(46, 177);
-		cieCenter.getLblCieImage().setBounds(12, 12, 190, 114);
+		cieCenter.getLblName().setSize(209, 25);
+		cieCenter.getLblName().setLocation(30, 199);
+		cieCenter.getLblIntestatario().setLocation(30, 177);
+		cieCenter.getLblCieImage().setBounds(0, 0, 216, 138);
 		cieCenter.setSize(216, 224);
-		cieCenter.getLblNumberValue().setBounds(46, 151, 190, 25);
-		cieCenter.getLblCardNumber().setBounds(46, 138, 111, 15);
+		cieCenter.getLblNumberValue().setBounds(30, 151, 190, 25);
+		cieCenter.getLblCardNumber().setBounds(30, 138, 111, 15);
 		
-		cieCenter.setLocation(197, 22);
+		cieCenter.setLocation(191, 22);
 				
 		this.add(cieLeft);
 		this.add(cieRight);
 		this.add(cieCenter);	
 		
 		
-		btnLeft = new JButton("<");
-		btnLeft.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnLeft.setBounds(-12, 110, 52, 40);
+		btnLeft = new JButton("");
+		btnLeft.setIcon(new ImageIcon(carousel.class.getResource("/it/ipzs/cieid/res/back@2x.png")));
+		btnLeft.setForeground(new Color(30, 144, 255));
+		btnLeft.setFont(new Font("Dialog", Font.BOLD, 15));
+		btnLeft.setBounds(-12, 150, 52, 48);
 		btnLeft.setOpaque(false);
 		btnLeft.setBorderPainted(false);
 		btnLeft.setContentAreaFilled(false);
@@ -160,8 +157,10 @@ public class carousel extends JPanel {
 		
 		this.add(btnLeft);
 		
-		btnRight = new JButton(">");
-		btnRight.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnRight = new JButton("");
+		btnRight.setIcon(new ImageIcon(carousel.class.getResource("/it/ipzs/cieid/res/forward@2x.png")));
+		btnRight.setForeground(new Color(30, 144, 255));
+		btnRight.setFont(new Font("Dialog", Font.BOLD, 15));
 		btnRight.setOpaque(false);
 		btnRight.setBorderPainted(false);
 		btnRight.setContentAreaFilled(false);
@@ -184,7 +183,7 @@ public class carousel extends JPanel {
 			
 		});
 				
-		btnRight.setBounds(548, 110, 52, 40);
+		btnRight.setBounds(548, 150, 52, 48);
 		this.add(btnRight);
 		
 		radioButtonPanel = new JPanel();

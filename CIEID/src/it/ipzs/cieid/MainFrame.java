@@ -590,7 +590,7 @@ public class MainFrame extends JFrame {
 		cieCarousel = new carousel();
 		cieCarousel.cieCenter.setLocation(190, 23);
 		cieCarousel.setSize(595, 307);
-		cieCarousel.setLocation(0, 190);
+		cieCarousel.setLocation(0, 170);
 		panel_3.add(cieCarousel);
 		
 		btnPanel = new JPanel();
@@ -1611,8 +1611,8 @@ public class MainFrame extends JFrame {
 	private void disabilitaCIE(String pan, String name)
 	{
 		
-		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Stai rimuovendo la Cardta di Identità di " + name + " dal sistema, per utilizzarla nuovamente "
-				+ " dovrai ripetere l'abbinamento" , "Disabilita CIE", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.YES_OPTION)
+		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Stai rimuovendo la Cardta di Identità di " + name + "\n dal sistema, per utilizzarla nuovamente "
+				+ " dovrai ripetere l'abbinamento" , "Vuoi rimuovere la carta?", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.YES_OPTION)
 			return;
 		
 		int ret = Middleware.INSTANCE.DisabilitaCIE(pan);

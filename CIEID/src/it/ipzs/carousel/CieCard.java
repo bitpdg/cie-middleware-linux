@@ -90,11 +90,12 @@ public class CieCard extends JPanel {
 				this.add(lblName);
 				
 				try {
-					imageIcon1 = new ImageIcon(Utils.scaleimage(220, 120, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/CIE1.png"))));
+					imageIcon1 = new ImageIcon(Utils.scaleimage(216, 138, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/cie.jpg"))));
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}	
+				
 				lblCieImage = new JLabel();
 				lblCieImage.setBounds(26, 11, 220, 120);
 				lblCieImage.setIcon(imageIcon1);
@@ -139,7 +140,7 @@ public class CieCard extends JPanel {
 				
 				//TODO sostituire l'immagine
 				try {
-					imageIcon1 = new ImageIcon(Utils.scaleimage(140, 80, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/CIE1.png"))));
+					imageIcon1 = new ImageIcon(Utils.scaleimage(140, 86, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/cie.jpg"))));
 					
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
@@ -153,10 +154,12 @@ public class CieCard extends JPanel {
 				//lblCieImage.setEnabled(false);
 				this.add(lblCieImage);
 				
+				
 				break;
 		}
 		
 	}
+	
 	
 	
 	public JLabel getLblNumberValue() {
