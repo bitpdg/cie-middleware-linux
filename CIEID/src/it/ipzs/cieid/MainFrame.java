@@ -153,6 +153,7 @@ public class MainFrame extends JFrame {
 	private JButton btnRemoveAll;
 	private JButton btnRemoveSelected;
 	private JButton btnNewButton;
+	private JButton btnAnnulla;
 	private carousel cieCarousel;
 	private Map<String, Cie> cieDictionary;
 	/**
@@ -334,8 +335,8 @@ public class MainFrame extends JFrame {
 		
 		btnAbbina.setForeground(Color.WHITE);
 		btnAbbina.setBackground(new Color(30, 144, 255));
-		btnAbbina.setBounds(206, 507, 114, 25);
-		panel_1.add(btnAbbina);
+		btnAbbina.setBounds(258, 524, 114, 25);
+		//panel_1.add(btnAbbina);
 		
 		passwordFields[0] = passwordField = new JPasswordField();
 		passwordField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -521,6 +522,27 @@ public class MainFrame extends JFrame {
 		lblInserisciIlPin.setBounds(252, 259, 299, 36);
 		panel_1.add(lblInserisciIlPin);
 		
+		JPanel buttonsPanel = new JPanel();
+		buttonsPanel.setBackground(new Color(255, 255, 255));
+		FlowLayout flowLayout = (FlowLayout) buttonsPanel.getLayout();
+		flowLayout.setHgap(100);
+		buttonsPanel.setBounds(133, 510, 384, 36);
+		
+	    btnAnnulla = new JButton("Annulla");
+		
+		btnAnnulla.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				selectHome();
+			}
+		});
+		
+		btnAnnulla.setForeground(Color.WHITE);
+		btnAnnulla.setBackground(new Color(30, 144, 255));
+		buttonsPanel.add(btnAnnulla);
+		buttonsPanel.add(btnAbbina);
+
+		panel_1.add(buttonsPanel);
+		
 		panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBackground(Color.WHITE);
@@ -545,7 +567,7 @@ public class MainFrame extends JFrame {
 		label_1.setBounds(29, 194, 211, 205);
 		panel_2.add(label_1);
 		
-		checkBox = new JCheckBox("Non mostrare più");
+		checkBox = new JCheckBox("Non mostrare piÃ¹");
 		checkBox.setBackground(Color.WHITE);
 		checkBox.setBounds(591, 508, 157, 23);
 		panel_2.add(checkBox);
@@ -560,21 +582,20 @@ public class MainFrame extends JFrame {
 		progressBar.setBounds(258, 324, 293, 14);
 		panel_2.add(progressBar);
 		
-		
 		panel_3 = new JPanel();
 		panel_3.setLayout(null);
 		panel_3.setBackground(Color.WHITE);
 
 		tabbedPane.addTab("New tab", null, panel_3, null);
 		cieCarousel = new carousel();
+		cieCarousel.cieCenter.setLocation(190, 23);
 		cieCarousel.setSize(595, 307);
 		cieCarousel.setLocation(0, 190);
 		panel_3.add(cieCarousel);
 		
 		btnPanel = new JPanel();
-		btnPanel.setBounds(0, 520, 595, 65);
+		btnPanel.setBounds(0, 505, 595, 46);
 		btnPanel.setBackground(Color.WHITE);
-		btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 5));
 		
 		btnRemoveAll = new JButton("Rimuovi tutte");
 		btnRemoveAll.setForeground(Color.WHITE);
@@ -587,6 +608,7 @@ public class MainFrame extends JFrame {
 						disabilitaAllCIE(cieList);
 				}
 		});
+		btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
 		
 		btnPanel.add(btnRemoveAll);		
 		
@@ -596,7 +618,7 @@ public class MainFrame extends JFrame {
 		btnRemoveSelected.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Cie cieToDelete = cieCarousel.getCardAtIndex();
-					disabilitaCIE(cieToDelete.getPan(), cieToDelete.getSerialNumber());	
+					disabilitaCIE(cieToDelete.getPan(), cieToDelete.getName());	
 
 			}
 		});
@@ -624,7 +646,7 @@ public class MainFrame extends JFrame {
 		
 		txtpnCieAbbinataCon = new JTextPane();
 		txtpnCieAbbinataCon.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtpnCieAbbinataCon.setText("Carta di identità elettronica abbinata correttamente");
+		txtpnCieAbbinataCon.setText("Carta di identitÃ  elettronica abbinata correttamente");
 		txtpnCieAbbinataCon.setEditable(false);
 		txtpnCieAbbinataCon.setBounds(63, 84, 492, 46);
 		panel_3.add(txtpnCieAbbinataCon);
@@ -646,7 +668,7 @@ public class MainFrame extends JFrame {
 		
 		txtpnCieAbbinataCon = new JTextPane();
 		txtpnCieAbbinataCon.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtpnCieAbbinataCon.setText("Carta di identità elettronica abbinata correttamente");
+		txtpnCieAbbinataCon.setText("Carta di identitÃ  elettronica abbinata correttamente");
 		txtpnCieAbbinataCon.setEditable(false);
 		txtpnCieAbbinataCon.setBounds(63, 84, 492, 46);
 		panel_3.add(txtpnCieAbbinataCon);
@@ -657,7 +679,7 @@ public class MainFrame extends JFrame {
 		label_4.setBounds(29, 194, 211, 205);
 		panel_3.add(label_4);
 		
-		checkBox_1 = new JCheckBox("Non mostrare più");
+		checkBox_1 = new JCheckBox("Non mostrare piÃ¹");
 		checkBox_1.setBackground(Color.WHITE);
 		checkBox_1.setBounds(591, 508, 157, 23);
 		panel_3.add(checkBox_1);
@@ -711,7 +733,7 @@ public class MainFrame extends JFrame {
 		panel_4.add(lblCambiaPin);
 		
 		txtpnIlPinDella = new JTextPane();
-		txtpnIlPinDella.setText("IL PIN della tua CIE è un dato sensibile,\ntrattalo con cautela.");
+		txtpnIlPinDella.setText("IL PIN della tua CIE Ã¨ un dato sensibile,\ntrattalo con cautela.");
 		txtpnIlPinDella.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnIlPinDella.setEditable(false);
 		txtpnIlPinDella.setBounds(63, 84, 492, 46);
@@ -723,7 +745,7 @@ public class MainFrame extends JFrame {
 		label_5.setBounds(29, 194, 211, 205);
 		panel_4.add(label_5);
 		
-		checkBox_2 = new JCheckBox("Non mostrare più");
+		checkBox_2 = new JCheckBox("Non mostrare piÃ¹");
 		checkBox_2.setBackground(Color.WHITE);
 		checkBox_2.setBounds(591, 508, 157, 23);
 		panel_4.add(checkBox_2);
@@ -810,7 +832,7 @@ public class MainFrame extends JFrame {
 		panel_5.add(lblCambiaPin_1);
 		
 		txtpnIlPinDella_1 = new JTextPane();
-		txtpnIlPinDella_1.setText("IL PIN della tua CIE è un dato sensibile,\ntrattalo con cautela.");
+		txtpnIlPinDella_1.setText("IL PIN della tua CIE Ã¨ un dato sensibile,\ntrattalo con cautela.");
 		txtpnIlPinDella_1.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnIlPinDella_1.setEditable(false);
 		txtpnIlPinDella_1.setBounds(63, 84, 492, 46);
@@ -822,7 +844,7 @@ public class MainFrame extends JFrame {
 		label_6.setBounds(29, 194, 211, 205);
 		panel_5.add(label_6);
 		
-		checkBox_3 = new JCheckBox("Non mostrare più");
+		checkBox_3 = new JCheckBox("Non mostrare piÃ¹");
 		checkBox_3.setBackground(Color.WHITE);
 		checkBox_3.setBounds(591, 508, 157, 23);
 		panel_5.add(checkBox_3);
@@ -861,7 +883,7 @@ public class MainFrame extends JFrame {
 		label_7.setBounds(29, 194, 211, 205);
 		panel_6.add(label_7);
 		
-		checkBox_4 = new JCheckBox("Non mostrare più");
+		checkBox_4 = new JCheckBox("Non mostrare piÃ¹");
 		checkBox_4.setBackground(Color.WHITE);
 		checkBox_4.setBounds(591, 508, 157, 23);
 		panel_6.add(checkBox_4);
@@ -959,7 +981,7 @@ public class MainFrame extends JFrame {
 		label_8.setBounds(29, 194, 211, 205);
 		panel_7.add(label_8);
 		
-		checkBox_5 = new JCheckBox("Non mostrare più");
+		checkBox_5 = new JCheckBox("Non mostrare piÃ¹");
 		checkBox_5.setBackground(Color.WHITE);
 		checkBox_5.setBounds(591, 508, 157, 23);
 		panel_7.add(checkBox_5);
@@ -1181,7 +1203,7 @@ public class MainFrame extends JFrame {
 			                            break;
 
 			                        case CKR_PIN_INCORRECT:
-			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato è errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
+			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato Ã¨ errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
 			                            selectHome();
 			                            break;
 
@@ -1196,7 +1218,7 @@ public class MainFrame extends JFrame {
 			                            break;
 
 			                        case CKR_OK:
-			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "L'abilitazione della CIE è avvennuta con successo", "CIE abilitata", JOptionPane.INFORMATION_MESSAGE);                        	
+			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "L'abilitazione della CIE Ã¨ avvennuta con successo", "CIE abilitata", JOptionPane.INFORMATION_MESSAGE);                        	
 			              
 			                        	Gson gson = new Gson();
 			                        	String serialDictionary = gson.toJson(cieDictionary);
@@ -1374,7 +1396,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_PIN_INCORRECT:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato è errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato Ã¨ errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
 			                    tabbedPane.setSelectedIndex(3);
 			                    break;
 			
@@ -1389,7 +1411,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_OK:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Il PIN è stato modificato con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Il PIN Ã¨ stato modificato con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
 			                    selectHome();
 			                    PINNoticeDialog pindlg = new PINNoticeDialog();
 			                    pindlg.setLocationRelativeTo(MainFrame.this);
@@ -1557,7 +1579,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_PIN_INCORRECT:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PUK digitato è errato. rimangono %d tentativi", attempts[0]), "PUK non corretto", JOptionPane.ERROR_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PUK digitato Ã¨ errato. rimangono %d tentativi", attempts[0]), "PUK non corretto", JOptionPane.ERROR_MESSAGE);
 			                    tabbedPane.setSelectedIndex(5);
 			                    break;
 			
@@ -1572,7 +1594,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_OK:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "La CIE è stata sbloccata con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "La CIE Ã¨ stata sbloccata con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
 			                    selectHome();
 			                    PINNoticeDialog pindlg = new PINNoticeDialog();
 			                    pindlg.setLocationRelativeTo(MainFrame.this);
@@ -1586,10 +1608,11 @@ public class MainFrame extends JFrame {
 		});
 	}
 	
-	private void disabilitaCIE(String pan, String efSeriale)
+	private void disabilitaCIE(String pan, String name)
 	{
 		
-		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Vuoi disabilitare la CIE numero " + efSeriale + "?" , "Disabilita CIE", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Stai rimuovendo la Cardta di Identità di " + name + " dal sistema, per utilizzarla nuovamente "
+				+ " dovrai ripetere l'abbinamento" , "Disabilita CIE", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.YES_OPTION)
 			return;
 		
 		int ret = Middleware.INSTANCE.DisabilitaCIE(pan);
@@ -1609,7 +1632,7 @@ public class MainFrame extends JFrame {
 				selectHome();
                 break;
             default:
-            	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Impossibile disabilitare la CIE numero " + efSeriale, "CIE non disabilitata", JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Impossibile disabilitare la CIE di " + name, "CIE non disabilitata", JOptionPane.ERROR_MESSAGE);
                 break;
         }
 	}
@@ -1648,6 +1671,28 @@ public class MainFrame extends JFrame {
 		
 		selectHome();
 
+	}
+	
+	private void configureHomeButtons(Map<String, Cie> cieDictionary)
+	{
+		if(cieDictionary.size() > 1)
+		{
+			btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+			btnRemoveAll.setVisible(true);
+		}else
+		{
+			btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 40, 5));
+			btnRemoveAll.setVisible(false);
+		}
+		
+		if(cieDictionary.size() == 0)
+		{
+			btnAnnulla.setVisible(false);
+		}else
+		{
+			btnAnnulla.setVisible(true);
+		}
+		
 	}
 	
 	private void selectHome()
@@ -1732,13 +1777,14 @@ public class MainFrame extends JFrame {
 		        });
 			}
 		}
-		
+		configureHomeButtons(cieDictionary);
 		selectButton(btnHome);
 	}
 	
 	private void selectCardholder()
 	{
 		tabbedPane.setSelectedIndex(2);
+		configureHomeButtons(cieDictionary);
 		selectButton(btnHome);
 	}
 	

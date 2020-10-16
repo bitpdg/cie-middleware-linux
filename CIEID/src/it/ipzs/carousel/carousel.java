@@ -125,7 +125,7 @@ public class carousel extends JPanel {
 		cieCenter.getLblName().setSize(190, 25);
 		cieCenter.getLblName().setLocation(46, 199);
 		cieCenter.getLblIntestatario().setLocation(46, 177);
-		cieCenter.getLblCieImage().setBounds(0, 0, 206, 127);
+		cieCenter.getLblCieImage().setBounds(12, 12, 190, 114);
 		cieCenter.setSize(216, 224);
 		cieCenter.getLblNumberValue().setBounds(46, 151, 190, 25);
 		cieCenter.getLblCardNumber().setBounds(46, 138, 111, 15);

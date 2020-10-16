@@ -89,9 +89,8 @@ public class CieCard extends JPanel {
 				lblName.setSize(190, 25);
 				this.add(lblName);
 				
-				//TODO sostituire l'immagine
 				try {
-					imageIcon1 = new ImageIcon(Utils.scaleimage(200, 120, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/cie1.png"))));
+					imageIcon1 = new ImageIcon(Utils.scaleimage(220, 120, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/CIE1.png"))));
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
@@ -140,7 +139,7 @@ public class CieCard extends JPanel {
 				
 				//TODO sostituire l'immagine
 				try {
-					imageIcon1 = new ImageIcon(Utils.scaleimage(140, 80, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/cie1.png"))));
+					imageIcon1 = new ImageIcon(Utils.scaleimage(140, 80, ImageIO.read(MainFrame.class.getResource("/it/ipzs/cieid/res/CIE1.png"))));
 					
 				} catch (IOException e2) {
 					// TODO Auto-generated catch block
