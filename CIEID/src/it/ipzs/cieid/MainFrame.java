@@ -56,6 +56,7 @@ public class MainFrame extends JFrame {
     public static final int CKR_PIN_INCORRECT = 0x000000A0;
     public static final int CKR_PIN_INVALID = 0x000000A1;
     public static final int CKR_PIN_LEN_RANGE = 0x000000A2;
+    public static final int CARD_ALREADY_ENABLED = 0x000000F0;
 
     /* CKR_PIN_EXPIRED and CKR_PIN_LOCKED are new for v2.0 */
     public static final int CKR_PIN_EXPIRED = 0x000000A3;
@@ -526,7 +527,7 @@ public class MainFrame extends JFrame {
 		buttonsPanel.setBackground(new Color(255, 255, 255));
 		FlowLayout flowLayout = (FlowLayout) buttonsPanel.getLayout();
 		flowLayout.setHgap(100);
-		buttonsPanel.setBounds(133, 510, 384, 36);
+		buttonsPanel.setBounds(133, 500, 384, 36);
 		
 	    btnAnnulla = new JButton("Annulla");
 		
@@ -594,7 +595,7 @@ public class MainFrame extends JFrame {
 		panel_3.add(cieCarousel);
 		
 		btnPanel = new JPanel();
-		btnPanel.setBounds(0, 505, 595, 46);
+		btnPanel.setBounds(0, 500, 595, 46);
 		btnPanel.setBackground(Color.WHITE);
 		
 		btnRemoveAll = new JButton("Rimuovi tutte");
@@ -1228,6 +1229,11 @@ public class MainFrame extends JFrame {
 			                        	
 			                            selectCardholder();	                            
 			                            break;
+			                        case CARD_ALREADY_ENABLED:
+			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Carta già abilitata", "Impossibile abbinare la carta", JOptionPane.ERROR_MESSAGE);
+			                            selectHome();
+			                            break;
+			                        	
 			                    }	                
 		                            									
 							} catch (Exception e) {

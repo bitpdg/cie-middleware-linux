@@ -80,9 +80,12 @@ public class carousel extends JPanel {
 		this.setLayout(null);
 		
 		cieLeft = new CieCard(CieCard.Size.CarouselSizeSmall);
+		cieLeft.getLblIntestatario().setLocation(20, 128);
+		cieLeft.getLblCardNumber().setLocation(20, 102);
+		cieLeft.getLblNumberValue().setFont(new Font("Dialog", Font.PLAIN, 9));
 		cieLeft.getLblName().setFont(new Font("Dialog", Font.PLAIN, 9));
-		cieLeft.getLblName().setLocation(29, 140);
-		cieLeft.getLblNumberValue().setLocation(29, 113);
+		cieLeft.getLblName().setLocation(20, 140);
+		cieLeft.getLblNumberValue().setLocation(20, 113);
 		cieLeft.getLblCieImage().setSize(140, 86);
 		cieLeft.setSize(150, 158);
 		cieLeft.getLblCieImage().setLocation(5, 0);
@@ -94,9 +97,11 @@ public class carousel extends JPanel {
 		cieLeft.setLocation(38, 50);
 			
 		cieRight = new CieCard(CieCard.Size.CarouselSizeSmall);
+		cieRight.getLblIntestatario().setLocation(20, 128);
+		cieRight.getLblCardNumber().setLocation(20, 102);
 		cieRight.getLblName().setFont(new Font("Dialog", Font.PLAIN, 9));
-		cieRight.getLblName().setLocation(29, 140);
-		cieRight.getLblNumberValue().setLocation(29, 113);
+		cieRight.getLblName().setLocation(20, 140);
+		cieRight.getLblNumberValue().setLocation(20, 113);
 		cieRight.getLblCieImage().setSize(140, 86);
 		cieRight.getLblCieImage().setLocation(5, 0);
 		//cieRight.getLblNumberValue().setBounds(29, 129, 100, -16);
@@ -118,7 +123,7 @@ public class carousel extends JPanel {
 		cieCenter.getLblName().setFont(new Font("Tahoma", Font.BOLD, 14));
 		cieCenter.getLblNumberValue().setFont(new Font("Tahoma", Font.BOLD, 14));
 		cieCenter.getLblName().setSize(209, 25);
-		cieCenter.getLblName().setLocation(30, 199);
+		cieCenter.getLblName().setLocation(30, 190);
 		cieCenter.getLblIntestatario().setLocation(30, 177);
 		cieCenter.getLblCieImage().setBounds(0, 0, 216, 138);
 		cieCenter.setSize(216, 224);
