@@ -1617,7 +1617,7 @@ public class MainFrame extends JFrame {
 	private void disabilitaCIE(String pan, String name)
 	{
 		
-		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Stai rimuovendo la Cardta di Identità di " + name + "\n dal sistema, per utilizzarla nuovamente "
+		if(JOptionPane.showConfirmDialog(this.getContentPane(), "Stai rimuovendo la Carta di Identità di " + name + "\n dal sistema, per utilizzarla nuovamente "
 				+ " dovrai ripetere l'abbinamento" , "Vuoi rimuovere la carta?", JOptionPane.OK_CANCEL_OPTION) != JOptionPane.YES_OPTION)
 			return;
 		
@@ -1754,6 +1754,9 @@ public class MainFrame extends JFrame {
         	Gson gson = new Gson();
 			String stringDictionary = gson.toJson(cieDictionary);
 			Utils.setProperty("cieDictionary", stringDictionary);
+			Utils.setProperty("serialnumber", "");
+			Utils.setProperty("cardholder", "");
+			Utils.setProperty("ef_seriale", "");
 			/***********/
 			
 			cieCarousel.configureCards(cieDictionary);
