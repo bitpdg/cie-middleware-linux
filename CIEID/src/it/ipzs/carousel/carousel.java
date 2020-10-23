@@ -30,43 +30,6 @@ public class carousel extends JPanel {
 	public CieCard cieCenter;
 	public CieCard cieRight;
 	
-	/*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-
-					Map<String, Cie> cieDictionary;
-					
-					Cie cie1 = new Cie("Giovanni Muchacha", "CA123456AA");
-					Cie cie2 = new Cie("Paolo Acampa", "CA654321AA");
-					Cie cie3 = new Cie("Gennaro Stanzione", "CA246813AA");
-					Cie cie4 = new Cie("Catello Cioffi", "CA9461325AA");
-					Cie cie5 = new Cie("Vincenzo Bruscino", "CA5643126AA");
-
-					
-					cieDictionary = new HashMap<String, Cie>();
-					
-					cieDictionary.put("123456789", cie1);
-					cieDictionary.put("987654321", cie2);
-					
-					
-					cieDictionary.put("147258369", cie3);
-					cieDictionary.put("963852741", cie4);
-					cieDictionary.put("167315945", cie5);	
-				
-					
-					carousel frame = new carousel();
-					frame.configureCards(cieDictionary);
-					
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	*/
 	
 	public carousel()
 	{
@@ -80,10 +43,13 @@ public class carousel extends JPanel {
 		this.setLayout(null);
 		
 		cieLeft = new CieCard(CieCard.Size.CarouselSizeSmall);
+		cieLeft.getLblName().setSize(125, 15);
+		cieLeft.getLblCardNumber().setFont(new Font("Dialog", Font.PLAIN, 9));
+		cieLeft.getLblIntestatario().setFont(new Font("Dialog", Font.PLAIN, 9));
 		cieLeft.getLblIntestatario().setLocation(20, 128);
 		cieLeft.getLblCardNumber().setLocation(20, 102);
-		cieLeft.getLblNumberValue().setFont(new Font("Dialog", Font.PLAIN, 9));
-		cieLeft.getLblName().setFont(new Font("Dialog", Font.PLAIN, 9));
+		cieLeft.getLblNumberValue().setFont(new Font("Dialog", Font.PLAIN, 10));
+		cieLeft.getLblName().setFont(new Font("Dialog", Font.PLAIN, 10));
 		cieLeft.getLblName().setLocation(20, 140);
 		cieLeft.getLblNumberValue().setLocation(20, 113);
 		cieLeft.getLblCieImage().setSize(140, 86);
@@ -97,9 +63,13 @@ public class carousel extends JPanel {
 		cieLeft.setLocation(38, 50);
 			
 		cieRight = new CieCard(CieCard.Size.CarouselSizeSmall);
+		cieRight.getLblName().setSize(125, 15);
+		cieRight.getLblIntestatario().setFont(new Font("Dialog", Font.PLAIN, 9));
+		cieRight.getLblNumberValue().setFont(new Font("Dialog", Font.PLAIN, 10));
+		cieRight.getLblCardNumber().setFont(new Font("Dialog", Font.PLAIN, 9));
 		cieRight.getLblIntestatario().setLocation(20, 128);
 		cieRight.getLblCardNumber().setLocation(20, 102);
-		cieRight.getLblName().setFont(new Font("Dialog", Font.PLAIN, 9));
+		cieRight.getLblName().setFont(new Font("Dialog", Font.PLAIN, 10));
 		cieRight.getLblName().setLocation(20, 140);
 		cieRight.getLblNumberValue().setLocation(20, 113);
 		cieRight.getLblCieImage().setSize(140, 86);
@@ -118,10 +88,10 @@ public class carousel extends JPanel {
 		cieCenter.getLblCieImage().setSize(220, 120);
 		cieCenter.getLblCieImage().setLocation(20, 11);
 		
-		cieCenter.getLblIntestatario().setFont(new Font("Tahoma", Font.PLAIN, 12));
-		cieCenter.getLblCardNumber().setFont(new Font("Tahoma", Font.PLAIN, 12));
-		cieCenter.getLblName().setFont(new Font("Tahoma", Font.BOLD, 14));
-		cieCenter.getLblNumberValue().setFont(new Font("Tahoma", Font.BOLD, 14));
+		cieCenter.getLblIntestatario().setFont(new Font("Dialog", Font.PLAIN, 11));
+		cieCenter.getLblCardNumber().setFont(new Font("Dialog", Font.PLAIN, 11));
+		cieCenter.getLblName().setFont(new Font("Dialog", Font.BOLD, 12));
+		cieCenter.getLblNumberValue().setFont(new Font("Dialog", Font.BOLD, 12));
 		cieCenter.getLblName().setSize(209, 25);
 		cieCenter.getLblName().setLocation(30, 190);
 		cieCenter.getLblIntestatario().setLocation(30, 177);
@@ -334,18 +304,30 @@ public class carousel extends JPanel {
 		
 		if(cieList.size() == 2)
 		{
+
+			btnLeft.setVisible(true);
+			btnRight.setVisible(true);
+			
 			if(index == 0)
 			{
 				cieRight.setVisible(true);
 				cieLeft.setVisible(false);
-				btnLeft.setVisible(false);
-				btnRight.setVisible(true);
+
+				btnLeft.setEnabled(false);
+				btnRight.setEnabled(true);
+				
 			}else
 			{
 				cieRight.setVisible(false);
 				cieLeft.setVisible(true);
 				btnLeft.setVisible(true);
-				btnRight.setVisible(false);
+				btnRight.setVisible(true);
+				
+
+				btnLeft.setEnabled(true);
+				btnRight.setEnabled(false);
+				
+				
 			}
 		}else if(cieList.size() == 1)
 		{

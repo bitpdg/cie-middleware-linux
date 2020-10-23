@@ -200,7 +200,7 @@ CK_RV CK_ENTRY AbilitaCIE(const char*  szPAN, const char*  szPIN, int* attempts,
             }
 
 
-            progressCallBack(10, "Lettura dati dalla CIE");
+            progressCallBack(15, "Lettura dati dalla CIE");
         
             ByteArray serviziData(IdServizi.left(12));
 
