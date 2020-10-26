@@ -211,7 +211,8 @@ public class carousel extends JPanel {
 	
 	public void configureCards(Map<String, Cie> cieDictionary)
 	{
-				
+		index = 0;
+		
 		if(cieDictionary.size() == 0)
 		{
 			cieRight.setVisible(false);
@@ -225,8 +226,8 @@ public class carousel extends JPanel {
 			cieRight.setVisible(true);
 			cieLeft.setVisible(!(cieDictionary.size() == 2));
 			cieCenter.setVisible(true);
-			btnLeft.setVisible(!(cieDictionary.size() < 2));
-			btnRight.setVisible(!(cieDictionary.size() == 2));
+			btnLeft.setEnabled(!(cieDictionary.size() < 2));
+			btnRight.setEnabled(!(cieDictionary.size() == 2));
 		}
 		else if(cieDictionary.size() == 1)
 		{
@@ -301,8 +302,13 @@ public class carousel extends JPanel {
 		cieLeft.configureCard(cieList.get(leftIndex));
 		cieCenter.configureCard(cieList.get(index));
 		cieRight.configureCard(cieList.get(rightIndex));
-		
-		if(cieList.size() == 2)
+		if(cieList.size() >= 3 )
+		{
+
+			btnLeft.setEnabled(true);
+			btnRight.setEnabled(true);
+		}
+		else if(cieList.size() == 2)
 		{
 
 			btnLeft.setVisible(true);
