@@ -589,6 +589,19 @@ public class MainFrame extends JFrame {
 
 		tabbedPane.addTab("New tab", null, panel_3, null);
 		cieCarousel = new carousel();
+		cieCarousel.cieLeft.getLblName().setLocation(15, 140);
+		cieCarousel.cieRight.getLblName().setSize(130, 15);
+		cieCarousel.cieRight.getLblCardNumber().setLocation(15, 102);
+		cieCarousel.cieRight.getLblNumberValue().setLocation(15, 113);
+		cieCarousel.cieRight.getLblIntestatario().setLocation(15, 128);
+		cieCarousel.cieRight.getLblName().setLocation(15, 140);
+		cieCarousel.cieCenter.getLblName().setLocation(25, 190);
+		cieCarousel.cieCenter.getLblIntestatario().setLocation(25, 177);
+		cieCarousel.cieCenter.getLblNumberValue().setLocation(25, 151);
+		cieCarousel.cieCenter.getLblCardNumber().setLocation(25, 138);
+		cieCarousel.cieLeft.getLblIntestatario().setLocation(15, 128);
+		cieCarousel.cieLeft.getLblNumberValue().setLocation(15, 113);
+		cieCarousel.cieLeft.getLblCardNumber().setLocation(15, 102);
 		cieCarousel.cieCenter.setLocation(190, 23);
 		cieCarousel.setSize(595, 307);
 		cieCarousel.setLocation(0, 170);
