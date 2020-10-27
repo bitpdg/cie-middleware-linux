@@ -660,80 +660,10 @@ public class MainFrame extends JFrame {
 		
 		txtpnCieAbbinataCon = new JTextPane();
 		txtpnCieAbbinataCon.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtpnCieAbbinataCon.setText("Carta di identitÃ  elettronica abbinata correttamente");
+		txtpnCieAbbinataCon.setText("Carta di identità elettronica abbinata correttamente");
 		txtpnCieAbbinataCon.setEditable(false);
 		txtpnCieAbbinataCon.setBounds(63, 84, 492, 46);
 		panel_3.add(txtpnCieAbbinataCon);
-		
-		
-
-		
-		/*
-		panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBackground(Color.WHITE);
-		tabbedPane.addTab("New tab", null, panel_3, null);
-		
-		lblCieId = new JLabel("CIE ID");
-		lblCieId.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCieId.setFont(new Font("Dialog", Font.BOLD, 30));
-		lblCieId.setBounds(147, 36, 299, 36);
-		panel_3.add(lblCieId);
-		
-		txtpnCieAbbinataCon = new JTextPane();
-		txtpnCieAbbinataCon.setFont(new Font("Dialog", Font.PLAIN, 16));
-		txtpnCieAbbinataCon.setText("Carta di identitÃ  elettronica abbinata correttamente");
-		txtpnCieAbbinataCon.setEditable(false);
-		txtpnCieAbbinataCon.setBounds(63, 84, 492, 46);
-		panel_3.add(txtpnCieAbbinataCon);
-		
-		label_4 = new JLabel("");
-		label_4.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/icona_lettore_card_white.png")));
-		label_4.setHorizontalAlignment(SwingConstants.CENTER);
-		label_4.setBounds(29, 194, 211, 205);
-		panel_3.add(label_4);
-		
-		checkBox_1 = new JCheckBox("Non mostrare piÃ¹");
-		checkBox_1.setBackground(Color.WHITE);
-		checkBox_1.setBounds(591, 508, 157, 23);
-		panel_3.add(checkBox_1);
-		
-		buttonRemove = new JButton("Rimuovi Carta");
-		buttonRemove.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				disabilitaCIE();
-			}
-		});
-		buttonRemove.setForeground(Color.WHITE);
-		buttonRemove.setBackground(new Color(30, 144, 255));
-		buttonRemove.setBounds(206, 507, 150, 25);
-		panel_3.add(buttonRemove);
-		
-		lblNumeroCarta = new JLabel("Numero Carta");
-		lblNumeroCarta.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNumeroCarta.setFont(new Font("Dialog", Font.PLAIN, 14));
-		lblNumeroCarta.setBounds(252, 228, 299, 36);
-		panel_3.add(lblNumeroCarta);
-		
-		labelSerial = new JLabel("213123213");
-		labelSerial.setHorizontalAlignment(SwingConstants.LEFT);
-		labelSerial.setFont(new Font("Dialog", Font.BOLD, 16));
-		labelSerial.setBounds(252, 253, 299, 36);
-		panel_3.add(labelSerial);
-		
-		lblIntestatario = new JLabel("Intestatario");
-		lblIntestatario.setHorizontalAlignment(SwingConstants.LEFT);
-		lblIntestatario.setFont(new Font("Dialog", Font.PLAIN, 14));
-		lblIntestatario.setBounds(252, 293, 299, 36);
-		panel_3.add(lblIntestatario);
-		
-		labelCardholder = new JLabel("mario rossi");
-		labelCardholder.setHorizontalAlignment(SwingConstants.LEFT);
-		labelCardholder.setFont(new Font("Dialog", Font.BOLD, 16));
-		labelCardholder.setBounds(252, 318, 299, 36);
-		panel_3.add(labelCardholder);
-		*/
-		
 		
 		panel_4 = new JPanel();
 		panel_4.setLayout(null);
@@ -747,7 +677,7 @@ public class MainFrame extends JFrame {
 		panel_4.add(lblCambiaPin);
 		
 		txtpnIlPinDella = new JTextPane();
-		txtpnIlPinDella.setText("IL PIN della tua CIE Ã¨ un dato sensibile,\ntrattalo con cautela.");
+		txtpnIlPinDella.setText("IL PIN della tua CIE è un dato sensibile,\ntrattalo con cautela.");
 		txtpnIlPinDella.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnIlPinDella.setEditable(false);
 		txtpnIlPinDella.setBounds(63, 84, 492, 46);
@@ -846,7 +776,7 @@ public class MainFrame extends JFrame {
 		panel_5.add(lblCambiaPin_1);
 		
 		txtpnIlPinDella_1 = new JTextPane();
-		txtpnIlPinDella_1.setText("IL PIN della tua CIE Ã¨ un dato sensibile,\ntrattalo con cautela.");
+		txtpnIlPinDella_1.setText("IL PIN della tua CIE è un dato sensibile,\ntrattalo con cautela.");
 		txtpnIlPinDella_1.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnIlPinDella_1.setEditable(false);
 		txtpnIlPinDella_1.setBounds(63, 84, 492, 46);
@@ -1217,7 +1147,7 @@ public class MainFrame extends JFrame {
 			                            break;
 
 			                        case CKR_PIN_INCORRECT:
-			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato Ã¨ errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
+			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato è errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
 			                            selectHome();
 			                            break;
 
@@ -1232,7 +1162,7 @@ public class MainFrame extends JFrame {
 			                            break;
 
 			                        case CKR_OK:
-			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "L'abilitazione della CIE Ã¨ avvennuta con successo", "CIE abilitata", JOptionPane.INFORMATION_MESSAGE);                        	
+			                        	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "L'abilitazione della CIE è avvennuta con successo", "CIE abilitata", JOptionPane.INFORMATION_MESSAGE);                        	
 			              
 			                        	Gson gson = new Gson();
 			                        	String serialDictionary = gson.toJson(cieDictionary);
@@ -1415,7 +1345,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_PIN_INCORRECT:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato Ã¨ errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PIN digitato è errato. rimangono %d tentativi", attempts[0]), "PIN non corretto", JOptionPane.ERROR_MESSAGE);
 			                    tabbedPane.setSelectedIndex(3);
 			                    break;
 			
@@ -1430,7 +1360,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_OK:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Il PIN Ã¨ stato modificato con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Il PIN è stato modificato con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
 			                    selectHome();
 			                    PINNoticeDialog pindlg = new PINNoticeDialog();
 			                    pindlg.setLocationRelativeTo(MainFrame.this);
@@ -1598,7 +1528,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_PIN_INCORRECT:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PUK digitato Ã¨ errato. rimangono %d tentativi", attempts[0]), "PUK non corretto", JOptionPane.ERROR_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), String.format("Il PUK digitato è errato. rimangono %d tentativi", attempts[0]), "PUK non corretto", JOptionPane.ERROR_MESSAGE);
 			                    tabbedPane.setSelectedIndex(5);
 			                    break;
 			
@@ -1613,7 +1543,7 @@ public class MainFrame extends JFrame {
 			                    break;
 			
 			                case CKR_OK:
-			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "La CIE Ã¨ stata sbloccata con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+			                    JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "La CIE è stata sbloccata con successo", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
 			                    selectHome();
 			                    PINNoticeDialog pindlg = new PINNoticeDialog();
 			                    pindlg.setLocationRelativeTo(MainFrame.this);
