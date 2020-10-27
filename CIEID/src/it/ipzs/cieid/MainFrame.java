@@ -680,7 +680,7 @@ public class MainFrame extends JFrame {
 		txtpnIlPinDella.setText("IL PIN della tua CIE è un dato sensibile,\ntrattalo con cautela.");
 		txtpnIlPinDella.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnIlPinDella.setEditable(false);
-		txtpnIlPinDella.setBounds(63, 84, 492, 46);
+		txtpnIlPinDella.setBounds(147, 84, 316, 46);
 		panel_4.add(txtpnIlPinDella);
 		
 		label_5 = new JLabel("");
@@ -779,7 +779,7 @@ public class MainFrame extends JFrame {
 		txtpnIlPinDella_1.setText("IL PIN della tua CIE è un dato sensibile,\ntrattalo con cautela.");
 		txtpnIlPinDella_1.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnIlPinDella_1.setEditable(false);
-		txtpnIlPinDella_1.setBounds(63, 84, 492, 46);
+		txtpnIlPinDella_1.setBounds(147, 84, 327, 46);
 		panel_5.add(txtpnIlPinDella_1);
 		
 		label_6 = new JLabel("");
@@ -818,7 +818,7 @@ public class MainFrame extends JFrame {
 		txtpnUtilizzaIlCodice.setText("Utilizza il codice PUK ricevuto con la CIE");
 		txtpnUtilizzaIlCodice.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnUtilizzaIlCodice.setEditable(false);
-		txtpnUtilizzaIlCodice.setBounds(63, 84, 492, 46);
+		txtpnUtilizzaIlCodice.setBounds(126, 84, 334, 46);
 		
 		
 		label_7 = new JLabel("");
@@ -916,7 +916,7 @@ public class MainFrame extends JFrame {
 		txtpnUtilizzaIlCodice_1.setText("Utilizza il codice PUK ricevuto con la CIE");
 		txtpnUtilizzaIlCodice_1.setFont(new Font("Dialog", Font.PLAIN, 16));
 		txtpnUtilizzaIlCodice_1.setEditable(false);
-		txtpnUtilizzaIlCodice_1.setBounds(63, 84, 492, 46);
+		txtpnUtilizzaIlCodice_1.setBounds(132, 84, 355, 46);
 		panel_7.add(txtpnUtilizzaIlCodice_1);
 		
 		label_8 = new JLabel("");
