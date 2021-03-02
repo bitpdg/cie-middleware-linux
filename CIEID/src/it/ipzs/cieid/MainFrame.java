@@ -2,6 +2,7 @@ package it.ipzs.cieid;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.KeyEventDispatcher;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,9 +20,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -38,12 +42,26 @@ import javax.swing.text.StyledDocument;
 import com.ugos.util.Runner;
 
 import it.ipzs.cieid.util.Utils;
+import it.ipzs.pdfPreview.PdfPreview;
+import it.ipzs.cieid.FileDrop;
 import it.ipzs.carousel.*;
 import java.awt.FlowLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.awt.AlphaComposite;
+import java.awt.BorderLayout;
+import javax.swing.JTextArea;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.font.TextAttribute;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import java.awt.GridLayout;
+import javax.swing.BoxLayout;
+import java.awt.GridBagLayout;
 
 public class MainFrame extends JFrame {
 
@@ -81,6 +99,7 @@ public class MainFrame extends JFrame {
 	private JPasswordField passwordField_7;
 
 	private JPasswordField passwordFields[] = new JPasswordField[8];
+	private JPasswordField passwordSignFields[] = new JPasswordField[4];
 	private JPanel panel_2;
 	private JLabel label;
 	private JTextPane textPane_1;
@@ -157,6 +176,95 @@ public class MainFrame extends JFrame {
 	private JButton btnAnnulla;
 	private carousel cieCarousel;
 	private Map<String, Cie> cieDictionary;
+	private JButton btnFirma;
+	
+	private String filePath;
+	private JPanel selectFile;
+	private JLabel lblFirmaElettronica;
+	private JPanel panelLoadFile;
+	private JLabel lblNewLabel;
+	private JTextArea txtrTrascinaITuoi;
+	private JTextArea txtrOppure;
+	private JButton btnSelezionaUnDocumento;
+	private JPanel panel_11;
+	private JTextArea txtrAbbiamoCreatoPer;
+	private JLabel lblPersonalizza;
+	private JLabel lblNewLabel_2;
+	private JPanel selectOperation;
+	private JLabel lblFirmaElettronica_1;
+	private JPanel panel;
+	private JLabel lblNewLabel_1;
+	private JTextArea lblPathOp;
+	private JPanel panel_12;
+	private JLabel lblNewLabel_3;
+	private JLabel lblNewLabel_4;
+	private JLabel lblNewLabel_5;
+	private JLabel lblNewLabel_6;
+	private JButton btnAnnullaOp;
+	private JPanel panel_13;
+	private JPanel panel_14;
+	private JPanel selectFirmaOperation;
+	private JLabel lblFirmaElettronica_2;
+	private JPanel panel_15;
+	private JLabel lblNewLabel_7;
+	private JTextArea lblPathSignOp;
+	private JLabel imgP7m;
+	private JLabel lblCadesTitle;
+	private JTextArea lblCadesSub;
+	private JPanel panel_18;
+	private JPanel panel_19;
+	private JLabel imgPdf;
+	private JLabel lblPadesTitle;
+	private JTextArea lblPadesSub;
+	private JPanel panel_20;
+	private JCheckBox cbGraphicSig;
+	private JPanel pdfPreview;
+	private JLabel lblFirmaElettronica_3;
+	private JPanel panel_21;
+	private JLabel lblNewLabel_9;
+	private JTextArea lblPathPreview;
+	private JLabel lblNewLabel_10;
+	private JButton btnAnnullaOp_3;
+	private JPanel panelPdfPreview;
+	private JPanel panel_23;
+	private JPanel panel_24;
+	private JPanel panel_25;
+	private JButton btnUp;
+	private JButton btnDown;
+	private JPanel panel_22;
+	protected SignOp signOperation;
+	private JPanel panel_16;
+	private JPanel firmaPin;
+	private JLabel lblFirmaElettronica_4;
+	private JPanel panel_26;
+	private JPanel panel_27;
+	private JLabel lblNewLabel_11;
+	private JTextArea lblPathPin;
+	private JButton btnAnnullaOp_4;
+	private JLabel lblNewLabel_12;
+	private JButton btnAnnullaOp_5;
+	private JPanel panel_28;
+	private JLabel lblNewLabel1_1;
+	private JLabel lblNewLabel_13;
+	private JPasswordField passwordField_8;
+	private JPasswordField passwordField_9;
+	private JPasswordField passwordField_10;
+	private JPasswordField passwordField_11;
+	private JLabel lblEsitoFirma;
+	private JLabel imgEsitoFirma;
+	private JPanel panel_29;
+	private JPanel personalizzaFirma;
+	private JLabel lblFirmaElettronica_5;
+	private JButton btnAnnullaOp_6;
+	private JPanel panel_31;
+	PdfPreview preview;
+	
+	private enum SignOp
+	{
+		OP_NONE,
+		PADES,
+		CADES
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -177,6 +285,7 @@ public class MainFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainFrame(String[] args) {
+		signOperation = SignOp.OP_NONE;
 		setResizable(false);
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -233,7 +342,7 @@ public class MainFrame extends JFrame {
 		btnCambiaPin.setHorizontalAlignment(SwingConstants.LEFT);
 		btnCambiaPin.setBorderPainted(false);
 		btnCambiaPin.setBackground(SystemColor.control);
-		btnCambiaPin.setBounds(0, 190, 200, 45);
+		btnCambiaPin.setBounds(0, 244, 200, 45);
 		leftPanel.add(btnCambiaPin);
 		
 		btnSbloccaCarta = new JButton("   Sblocca Carta");
@@ -250,7 +359,7 @@ public class MainFrame extends JFrame {
 		btnSbloccaCarta.setHorizontalAlignment(SwingConstants.LEFT);
 		btnSbloccaCarta.setBorderPainted(false);
 		btnSbloccaCarta.setBackground(SystemColor.control);
-		btnSbloccaCarta.setBounds(0, 250, 200, 45);
+		btnSbloccaCarta.setBounds(0, 304, 200, 45);
 		leftPanel.add(btnSbloccaCarta);
 		
 		btnTutorial = new JButton("   Tutorial");
@@ -264,7 +373,7 @@ public class MainFrame extends JFrame {
 		btnTutorial.setHorizontalAlignment(SwingConstants.LEFT);
 		btnTutorial.setBorderPainted(false);
 		btnTutorial.setBackground(SystemColor.window);
-		btnTutorial.setBounds(0, 310, 200, 45);
+		btnTutorial.setBounds(0, 364, 200, 45);
 		leftPanel.add(btnTutorial);
 		
 		btnAiuto = new JButton("   Aiuto");
@@ -278,7 +387,7 @@ public class MainFrame extends JFrame {
 		btnAiuto.setHorizontalAlignment(SwingConstants.LEFT);
 		btnAiuto.setBorderPainted(false);
 		btnAiuto.setBackground(SystemColor.control);
-		btnAiuto.setBounds(0, 370, 200, 45);
+		btnAiuto.setBounds(0, 424, 200, 45);
 		leftPanel.add(btnAiuto);
 		
 		btnInformazioni = new JButton("   Informazioni");
@@ -292,12 +401,28 @@ public class MainFrame extends JFrame {
 		btnInformazioni.setHorizontalAlignment(SwingConstants.LEFT);
 		btnInformazioni.setBorderPainted(false);
 		btnInformazioni.setBackground(SystemColor.control);
-		btnInformazioni.setBounds(0, 430, 200, 45);
+		btnInformazioni.setBounds(0, 484, 200, 45);
 		leftPanel.add(btnInformazioni);
 		
+		btnFirma = new JButton("   Firma Elettronica");
+		btnFirma.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				selectButton(btnFirma);
+				tabbedPane.setSelectedIndex(10);
+			}
+		});
+		
+		btnFirma.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/firma_gray.png")));
+		btnFirma.setHorizontalAlignment(SwingConstants.LEFT);
+		btnFirma.setBorderPainted(false);
+		btnFirma.setBackground(SystemColor.menu);
+		btnFirma.setBounds(0, 188, 200, 45);
+		leftPanel.add(btnFirma);
+		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(200, -50, 600, 630);
+		tabbedPane.setBounds(200, -65, 600, 635);
 		contentPane.add(tabbedPane);
+
 		
 			
 		JPanel panel_1 = new JPanel();
@@ -1011,6 +1136,851 @@ public class MainFrame extends JFrame {
 		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		panel_6.add(txtpnUtilizzaIlCodice);
 		
+		selectFile = new JPanel();
+		selectFile.setBackground(SystemColor.text);
+		selectFile.setLayout(null);
+		tabbedPane.addTab("New tab", null, selectFile, null);
+		
+		lblFirmaElettronica = new JLabel("Firma Elettronica");
+		lblFirmaElettronica.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica.setBounds(165, 45, 302, 39);
+		selectFile.add(lblFirmaElettronica);
+		
+		panel_24 = new JPanel();
+		panel_24.setBackground(SystemColor.text);
+		panel_24.setBounds(28, 136, 540, 401);
+		selectFile.add(panel_24);
+		panel_24.setLayout(null);
+		
+		panelLoadFile = new JPanel();
+		panelLoadFile.setBackground(SystemColor.text);
+		panelLoadFile.setBounds(12, 12, 513, 300);
+		panel_24.add(panelLoadFile);
+		panelLoadFile.setLayout(null);
+		panelLoadFile.setBorder(BorderFactory.createDashedBorder(null, 5, 5));
+		
+        new FileDrop( panelLoadFile, new FileDrop.Listener()
+	      {   public void  filesDropped( java.io.File[] files )
+	          {   
+	              // handle file drop
+	              filePath = files[0].getAbsolutePath();
+	              System.out.println(filePath);
+	              lblPathOp.setText(filePath);
+	              tabbedPane.setSelectedIndex(11);
+	          }   // end filesDropped
+	      });
+		
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/upload.png")));
+		lblNewLabel.setBounds(223, 12, 80, 104);
+		panelLoadFile.add(lblNewLabel);
+		
+		txtrTrascinaITuoi = new JTextArea();
+		txtrTrascinaITuoi.setWrapStyleWord(true);
+		txtrTrascinaITuoi.setText("Trascina i tuoi documenti qui dentro per firmarli o per verificare una firma elettronica esistente");
+		txtrTrascinaITuoi.setRows(3);
+		txtrTrascinaITuoi.setLineWrap(true);
+		txtrTrascinaITuoi.setFont(new Font("Dialog", Font.PLAIN, 15));
+		txtrTrascinaITuoi.setEditable(false);
+		txtrTrascinaITuoi.setBackground(SystemColor.text);
+		txtrTrascinaITuoi.setBounds(70, 141, 385, 47);
+		panelLoadFile.add(txtrTrascinaITuoi);
+		
+		txtrOppure = new JTextArea();
+		txtrOppure.setWrapStyleWord(true);
+		txtrOppure.setText("oppure");
+		txtrOppure.setRows(3);
+		txtrOppure.setLineWrap(true);
+		txtrOppure.setFont(new Font("Dialog", Font.PLAIN, 15));
+		txtrOppure.setEditable(false);
+		txtrOppure.setBackground(SystemColor.text);
+		txtrOppure.setBounds(239, 212, 64, 23);
+		panelLoadFile.add(txtrOppure);
+		
+		btnSelezionaUnDocumento = new JButton("Seleziona un documento");
+		btnSelezionaUnDocumento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			    JFileChooser fileChooser = new JFileChooser();
+			    int returnValue = fileChooser.showOpenDialog(null);
+			    if (returnValue == JFileChooser.APPROVE_OPTION)
+			    {
+			        File selectedFile = fileChooser.getSelectedFile();
+			        filePath = selectedFile.getAbsolutePath();
+			        System.out.println(filePath);
+			        
+			        lblPathOp.setText(filePath);
+			        tabbedPane.setSelectedIndex(11);
+			    }
+			}
+		});
+		btnSelezionaUnDocumento.setForeground(Color.WHITE);
+		btnSelezionaUnDocumento.setBackground(new Color(30, 144, 255));
+		btnSelezionaUnDocumento.setBounds(161, 265, 209, 23);
+		panelLoadFile.add(btnSelezionaUnDocumento);
+		
+		panel_11 = new JPanel();
+		panel_11.setBackground(SystemColor.text);
+		panel_11.setBounds(0, 336, 540, 65);
+		panel_24.add(panel_11);
+		panel_11.setLayout(null);
+		
+		txtrAbbiamoCreatoPer = new JTextArea();
+		txtrAbbiamoCreatoPer.setWrapStyleWord(true);
+		txtrAbbiamoCreatoPer.setText("Abbiamo creato per te una firma grafica, ma se preferisci puo personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
+		txtrAbbiamoCreatoPer.setRows(3);
+		txtrAbbiamoCreatoPer.setLineWrap(true);
+		txtrAbbiamoCreatoPer.setFont(new Font("Dialog", Font.PLAIN, 12));
+		txtrAbbiamoCreatoPer.setEditable(false);
+		txtrAbbiamoCreatoPer.setBackground(SystemColor.text);
+		txtrAbbiamoCreatoPer.setBounds(81, 1, 346, 64);
+		panel_11.add(txtrAbbiamoCreatoPer);
+		
+		lblPersonalizza = new JLabel("Personalizza");
+		lblPersonalizza.setForeground(new Color(30, 144, 255));
+		lblPersonalizza.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblPersonalizza.setBounds(448, 12, 80, 25);
+		panel_11.add(lblPersonalizza);
+		
+		lblNewLabel_2 = new JLabel("");
+		lblNewLabel_2.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/firma@4x.png")));
+		lblNewLabel_2.setBounds(0, 1, 79, 64);
+		panel_11.add(lblNewLabel_2);
+		
+		selectOperation = new JPanel();
+		selectOperation.setBackground(SystemColor.text);
+		selectOperation.setLayout(null);
+		tabbedPane.addTab("New tab", null, selectOperation, null);
+		
+		lblFirmaElettronica_1 = new JLabel("Firma Elettronica");
+		lblFirmaElettronica_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica_1.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica_1.setBounds(165, 45, 307, 39);
+		selectOperation.add(lblFirmaElettronica_1);
+		
+		panel_16 = new JPanel();
+		panel_16.setBackground(SystemColor.text);
+		panel_16.setBounds(76, 132, 449, 415);
+		selectOperation.add(panel_16);
+		panel_16.setLayout(null);
+		
+		panel = new JPanel();
+		panel.setBounds(0, 0, 438, 82);
+		panel_16.add(panel);
+		panel.setBackground(SystemColor.text);
+		panel.setLayout(null);
+		
+		lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/generica.png")));
+		lblNewLabel_1.setBounds(0, 0, 60, 82);
+		panel.add(lblNewLabel_1);
+		
+		lblPathOp = new JTextArea();
+		lblPathOp.setWrapStyleWord(true);
+		lblPathOp.setText("pathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFile");
+		lblPathOp.setRows(3);
+		lblPathOp.setLineWrap(true);
+		lblPathOp.setFont(new Font("Dialog", Font.PLAIN, 15));
+		lblPathOp.setEditable(false);
+		lblPathOp.setBackground(SystemColor.text);
+		lblPathOp.setBounds(70, 18, 368, 64);
+		panel.add(lblPathOp);
+		
+		panel_12 = new JPanel();
+		panel_12.setBounds(102, 121, 228, 208);
+		panel_16.add(panel_12);
+		panel_12.setBackground(SystemColor.text);
+		panel_12.setLayout(null);
+		
+		panel_14 = new JPanel();
+		panel_14.setBackground(SystemColor.text);
+		panel_14.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panel_14.setBorder(BorderFactory.createLineBorder(Color.black));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panel_14.setBorder(null);
+			}
+		});
+		panel_14.setBounds(0, 115, 228, 93);
+		panel_12.add(panel_14);
+		panel_14.setLayout(null);
+		
+		lblNewLabel_3 = new JLabel("Verifica   >");
+		lblNewLabel_3.setBounds(107, 22, 121, 40);
+		panel_14.add(lblNewLabel_3);
+		lblNewLabel_3.setFont(new Font("Dialog", Font.PLAIN, 20));
+		
+		lblNewLabel_6 = new JLabel("");
+		lblNewLabel_6.setBounds(0, 0, 70, 93);
+		panel_14.add(lblNewLabel_6);
+		lblNewLabel_6.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/Coppia file certificato.png")));
+		
+		panel_13 = new JPanel();
+		panel_13.setBackground(SystemColor.text);
+		panel_13.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panel_13.setBorder(BorderFactory.createLineBorder(Color.black));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panel_13.setBorder(null);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				lblPathSignOp.setText(filePath);
+				if(getFileExtension(filePath).equals(".pdf"))
+				{
+					cbGraphicSig.setEnabled(true);
+				}else
+				{
+					cbGraphicSig.setEnabled(false);
+				}
+				
+				tabbedPane.setSelectedIndex(12);
+			}
+		});
+		panel_13.setBounds(0, 0, 228, 93);
+		panel_12.add(panel_13);
+		panel_13.setLayout(null);
+		
+		lblNewLabel_4 = new JLabel("Firma      >");
+		lblNewLabel_4.setBounds(107, 22, 121, 40);
+		panel_13.add(lblNewLabel_4);
+		lblNewLabel_4.setFont(new Font("Dialog", Font.PLAIN, 20));
+		
+		lblNewLabel_5 = new JLabel("");
+		lblNewLabel_5.setBounds(0, 0, 70, 93);
+		panel_13.add(lblNewLabel_5);
+		lblNewLabel_5.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/Coppia file firma.png")));
+		
+		btnAnnullaOp = new JButton("Annulla");
+		btnAnnullaOp.setBounds(147, 392, 136, 23);
+		panel_16.add(btnAnnullaOp);
+		btnAnnullaOp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tabbedPane.setSelectedIndex(10);
+			}
+		});
+		btnAnnullaOp.setForeground(Color.WHITE);
+		btnAnnullaOp.setBackground(new Color(30, 144, 255));
+		
+		selectFirmaOperation = new JPanel();
+		selectFirmaOperation.setBackground(SystemColor.text);
+		tabbedPane.addTab("New tab", null, selectFirmaOperation, null);
+		selectFirmaOperation.setLayout(null);
+		
+		lblFirmaElettronica_2 = new JLabel("Firma Elettronica");
+		lblFirmaElettronica_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica_2.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica_2.setBounds(165, 45, 291, 39);
+		selectFirmaOperation.add(lblFirmaElettronica_2);
+		
+		panel_23 = new JPanel();
+		panel_23.setBackground(SystemColor.text);
+		panel_23.setBounds(76, 132, 449, 415);
+		selectFirmaOperation.add(panel_23);
+		panel_23.setLayout(null);
+		
+		panel_15 = new JPanel();
+		panel_15.setBackground(SystemColor.text);
+		panel_15.setBounds(0, 0, 438, 82);
+		panel_23.add(panel_15);
+		panel_15.setLayout(null);
+		
+		lblNewLabel_7 = new JLabel("");
+		lblNewLabel_7.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/generica.png")));
+		lblNewLabel_7.setBounds(0, 0, 60, 82);
+		panel_15.add(lblNewLabel_7);
+		
+		lblPathSignOp = new JTextArea();
+		lblPathSignOp.setWrapStyleWord(true);
+		lblPathSignOp.setText("pathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFile");
+		lblPathSignOp.setRows(3);
+		lblPathSignOp.setLineWrap(true);
+		lblPathSignOp.setFont(new Font("Dialog", Font.PLAIN, 15));
+		lblPathSignOp.setEditable(false);
+		lblPathSignOp.setBackground(SystemColor.text);
+		lblPathSignOp.setBounds(70, 18, 368, 64);
+		panel_15.add(lblPathSignOp);
+		
+		panel_20 = new JPanel();
+		panel_20.setBackground(SystemColor.text);
+		panel_20.setBounds(0, 120, 448, 249);
+		panel_23.add(panel_20);
+		panel_20.setLayout(null);
+		
+		JLabel lblNewLabel_8_1 = new JLabel("Seleziona il tipo di firma");
+		lblNewLabel_8_1.setBounds(129, 11, 202, 39);
+		panel_20.add(lblNewLabel_8_1);
+		lblNewLabel_8_1.setFont(new Font("Dialog", Font.PLAIN, 17));
+		
+		panel_18 = new JPanel();
+		panel_18.setBackground(SystemColor.text);
+		panel_18.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent e) {
+				panel_18.setBorder(BorderFactory.createLineBorder(Color.black));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panel_18.setBorder(null);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				imgP7m.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/p7m.png")));
+				imgPdf.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/pdd_gray.png")));
+				cbGraphicSig.setForeground(Color.gray);
+				cbGraphicSig.setSelected(false);
+				lblPadesSub.setForeground(Color.gray);
+				lblPadesTitle.setForeground(Color.gray);
+				lblCadesTitle.setForeground(Color.blue);
+				lblCadesSub.setForeground(Color.black);
+				signOperation = SignOp.CADES;
+			}
+		});
+		panel_18.setBounds(0, 63, 198, 186);
+		panel_20.add(panel_18);
+		panel_18.setLayout(null);
+		
+		imgP7m = new JLabel("New label");
+		imgP7m.setBounds(0, 0, 50, 67);
+		panel_18.add(imgP7m);
+		imgP7m.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/p7m_grey.png")));
+		
+		lblCadesTitle = new JLabel("Firma CADES");
+		lblCadesTitle.addMouseListener(panel_18.getMouseListeners()[0]);
+		lblCadesTitle.setForeground(SystemColor.activeCaptionBorder);
+		lblCadesTitle.setBounds(60, 11, 126, 31);
+		panel_18.add(lblCadesTitle);
+		lblCadesTitle.setFont(new Font("Dialog", Font.PLAIN, 17));
+		
+		lblCadesSub = new JTextArea();
+		lblCadesSub.addMouseListener(panel_18.getMouseListeners()[0]);
+		
+		lblCadesSub.setForeground(SystemColor.activeCaptionBorder);
+		lblCadesSub.setBounds(60, 40, 128, 103);
+		panel_18.add(lblCadesSub);
+		lblCadesSub.setWrapStyleWord(true);
+		lblCadesSub.setText("Si appone su una qualsiasi tipologia di documentoi e prevede la generazione di una busta crittografica. Il documento firmato avr\u00E0 estensione .p7m");
+		lblCadesSub.setRows(3);
+		lblCadesSub.setLineWrap(true);
+		lblCadesSub.setFont(new Font("Dialog", Font.PLAIN, 11));
+		lblCadesSub.setEditable(false);
+		lblCadesSub.setBackground(SystemColor.text);
+		
+		panel_19 = new JPanel();
+		panel_19.setBackground(SystemColor.text);
+		
+				panel_19.setBounds(250, 63, 198, 186);
+				panel_20.add(panel_19);
+				panel_19.setLayout(null);
+				
+				imgPdf = new JLabel("New label");
+				imgPdf.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/pdd_gray.png")));
+				imgPdf.setBounds(0, 0, 50, 67);
+				panel_19.add(imgPdf);
+				
+				lblPadesTitle = new JLabel("Firma PADES");
+				//lblPadesTitle.addMouseListener(panel_19.getMouseListeners()[0]);
+				lblPadesTitle.setForeground(SystemColor.activeCaptionBorder);
+				lblPadesTitle.setFont(new Font("Dialog", Font.PLAIN, 17));
+				lblPadesTitle.setBounds(60, 11, 126, 31);
+				panel_19.add(lblPadesTitle);
+				
+				lblPadesSub = new JTextArea();
+				lblPadesSub.setForeground(SystemColor.activeCaptionBorder);
+				lblPadesSub.setWrapStyleWord(true);
+				lblPadesSub.setText("Si appone su documenti PDF nella versione grafica oppure in maniera invisibile. Il documento firmato avr\u00E0 estensione .pdf");
+				lblPadesSub.setRows(3);
+				lblPadesSub.setLineWrap(true);
+				lblPadesSub.setFont(new Font("Dialog", Font.PLAIN, 11));
+				lblPadesSub.setEditable(false);
+				lblPadesSub.setBackground(SystemColor.text);
+				lblPadesSub.setBounds(60, 40, 128, 104);
+				panel_19.add(lblPadesSub);
+				
+				cbGraphicSig = new JCheckBox("Aggiungi firma grafica");
+				cbGraphicSig.setBackground(SystemColor.text);
+				cbGraphicSig.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if(getFileExtension(filePath).equals(".pdf"))
+						{
+							panel_19.getMouseListeners()[0].mouseClicked(e);
+						}
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						panel_19.getMouseListeners()[0].mouseExited(e);
+					}
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						panel_19.getMouseListeners()[0].mouseEntered(e);
+					}
+					
+				});
+				cbGraphicSig.setForeground(SystemColor.activeCaptionBorder);
+				cbGraphicSig.setFont(new Font("Dialog", Font.PLAIN, 11));
+				cbGraphicSig.setBounds(6, 156, 162, 23);
+				panel_19.add(cbGraphicSig);
+				
+				JPanel panel_17 = new JPanel();
+				panel_17.setBackground(SystemColor.text);
+				panel_17.setBounds(48, 392, 359, 23);
+				panel_23.add(panel_17);
+				panel_17.setLayout(null);
+				
+				JButton btnAnnullaOp_1 = new JButton("Annulla");
+				btnAnnullaOp_1.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						imgP7m.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/p7m_grey.png")));
+						imgPdf.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/pdd_gray.png")));
+						cbGraphicSig.setForeground(Color.gray);
+						lblPadesSub.setForeground(Color.gray);
+						lblPadesTitle.setForeground(Color.gray);
+						lblCadesTitle.setForeground(Color.gray);
+						lblCadesSub.setForeground(Color.gray);
+						cbGraphicSig.setSelected(false);
+						
+						tabbedPane.setSelectedIndex(11);
+					}
+				});
+				btnAnnullaOp_1.setBounds(0, 0, 136, 23);
+				panel_17.add(btnAnnullaOp_1);
+				btnAnnullaOp_1.setForeground(Color.WHITE);
+				btnAnnullaOp_1.setBackground(new Color(30, 144, 255));
+				
+				JButton btnAnnullaOp_2 = new JButton("PROSEGUI");
+				btnAnnullaOp_2.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						if((signOperation == SignOp.PADES) && cbGraphicSig.isSelected())
+						{
+							String signImagePath = "/home/piero/Downloads/CA76461YX_default.png";
+							lblPathPreview.setText(filePath);
+							preview = new PdfPreview(panelPdfPreview, filePath, signImagePath);
+							tabbedPane.setSelectedIndex(13);
+						}else
+						{
+							lblPathPin.setText(filePath);
+							tabbedPane.setSelectedIndex(14);
+						}
+					}
+				});
+				
+				btnAnnullaOp_2.setBounds(223, 0, 136, 23);
+				panel_17.add(btnAnnullaOp_2);
+				btnAnnullaOp_2.setForeground(Color.WHITE);
+				btnAnnullaOp_2.setBackground(new Color(30, 144, 255));
+				panel_19.addMouseListener(new MouseAdapter() {
+					public void mouseEntered(MouseEvent e) {
+						panel_19.setBorder(BorderFactory.createLineBorder(Color.black));
+					}
+					@Override
+					public void mouseExited(MouseEvent e) {
+						panel_19.setBorder(null);
+					}
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if(getFileExtension(filePath).equals(".pdf"))
+						{
+							imgP7m.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/p7m_grey.png")));
+							imgPdf.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/pdf.png")));
+							cbGraphicSig.setForeground(Color.black);
+							lblPadesSub.setForeground(Color.black);
+							lblPadesTitle.setForeground(Color.red);
+							lblCadesTitle.setForeground(Color.gray);
+							lblCadesSub.setForeground(Color.gray);
+							
+							signOperation = SignOp.PADES;
+							
+							//TODO salvare tipo di operazione
+						}
+
+					}
+				});
+				
+				lblPadesSub.addMouseListener(panel_19.getMouseListeners()[0]);
+				lblPadesTitle.addMouseListener(panel_19.getMouseListeners()[0]);
+		
+		JLabel lblNewLabel_8 = new JLabel("Firma documento");
+		lblNewLabel_8.setFont(new Font("Dialog", Font.PLAIN, 17));
+		lblNewLabel_8.setBounds(237, 81, 151, 39);
+		selectFirmaOperation.add(lblNewLabel_8);
+		
+		pdfPreview = new JPanel();
+		pdfPreview.setBackground(SystemColor.text);
+		pdfPreview.setLayout(null);
+		tabbedPane.addTab("New tab", null, pdfPreview, null);
+		
+		lblFirmaElettronica_3 = new JLabel("Firma Elettronica");
+		lblFirmaElettronica_3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica_3.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica_3.setBounds(149, 47, 311, 39);
+		pdfPreview.add(lblFirmaElettronica_3);
+		
+		panel_25 = new JPanel();
+		panel_25.setBackground(SystemColor.text);
+		panel_25.setBounds(76, 132, 449, 415);
+		pdfPreview.add(panel_25);
+		panel_25.setLayout(null);
+		
+		panel_21 = new JPanel();
+		panel_21.setBackground(SystemColor.text);
+		panel_21.setBounds(0, 0, 438, 82);
+		panel_25.add(panel_21);
+		panel_21.setLayout(null);
+		
+		lblNewLabel_9 = new JLabel("");
+		lblNewLabel_9.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/generica.png")));
+		lblNewLabel_9.setBounds(0, 0, 60, 82);
+		panel_21.add(lblNewLabel_9);
+		
+		lblPathPreview = new JTextArea();
+		lblPathPreview.setWrapStyleWord(true);
+		lblPathPreview.setText("pathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFile");
+		lblPathPreview.setRows(3);
+		lblPathPreview.setLineWrap(true);
+		lblPathPreview.setFont(new Font("Dialog", Font.PLAIN, 15));
+		lblPathPreview.setEditable(false);
+		lblPathPreview.setBackground(SystemColor.text);
+		lblPathPreview.setBounds(70, 18, 368, 64);
+		panel_21.add(lblPathPreview);
+		
+		btnAnnullaOp_3 = new JButton("PROSEGUI");
+		btnAnnullaOp_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				tabbedPane.setSelectedIndex(14);
+			}
+		});
+		btnAnnullaOp_3.setBounds(147, 392, 136, 23);
+		panel_25.add(btnAnnullaOp_3);
+		btnAnnullaOp_3.setForeground(Color.WHITE);
+		btnAnnullaOp_3.setBackground(new Color(30, 144, 255));
+		
+		panelPdfPreview = new JPanel();
+		panelPdfPreview.setBorder(null);
+		panelPdfPreview.setBackground(SystemColor.control);
+		panelPdfPreview.setBounds(10, 94, 377, 286);
+		panel_25.add(panelPdfPreview);
+		GridBagLayout gbl_panelPdfPreview = new GridBagLayout();
+		gbl_panelPdfPreview.columnWidths = new int[]{0};
+		gbl_panelPdfPreview.rowHeights = new int[]{0};
+		gbl_panelPdfPreview.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_panelPdfPreview.rowWeights = new double[]{Double.MIN_VALUE};
+		panelPdfPreview.setLayout(gbl_panelPdfPreview);
+		
+		panel_22 = new JPanel();
+		panel_22.setBackground(SystemColor.text);
+		panel_22.setBounds(397, 153, 42, 172);
+		panel_25.add(panel_22);
+		panel_22.setLayout(null);
+
+
+		btnUp = new JButton("");
+		btnUp.setBackground(SystemColor.text);
+		btnUp.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/up@2x.png")));
+		btnUp.setBounds(0, 0, 42, 38);
+		btnUp.setOpaque(false);
+		btnUp.setBorderPainted(false);
+		btnUp.setContentAreaFilled(false);
+		btnUp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				preview.prevImage();
+			}
+		});		
+		panel_22.add(btnUp);
+		
+		btnDown = new JButton("");
+		btnDown.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/down@2x.png")));
+		btnDown.setBackground(SystemColor.text);
+		btnDown.setBounds(0, 134, 42, 38);
+		btnDown.setOpaque(false);
+		btnDown.setBorderPainted(false);
+		btnDown.setContentAreaFilled(false);
+		btnDown.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				preview.nextImage();
+			}
+		});		
+		panel_22.add(btnDown);
+		
+		lblNewLabel_10 = new JLabel("Trascina la firma in un punto desiderato all'interno del documento");
+		lblNewLabel_10.setFont(new Font("Dialog", Font.PLAIN, 16));
+		lblNewLabel_10.setBounds(35, 81, 515, 39);
+		pdfPreview.add(lblNewLabel_10);
+		
+		firmaPin = new JPanel();
+		firmaPin.setLayout(null);
+		firmaPin.setBackground(Color.WHITE);
+		tabbedPane.addTab("New tab", null, firmaPin, null);
+		
+		lblFirmaElettronica_4 = new JLabel("Firma Elettronica");
+		lblFirmaElettronica_4.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica_4.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica_4.setBounds(165, 45, 245, 39);
+		firmaPin.add(lblFirmaElettronica_4);
+		
+		panel_26 = new JPanel();
+		panel_26.setLayout(null);
+		panel_26.setBackground(Color.WHITE);
+		panel_26.setBounds(76, 132, 449, 415);
+		firmaPin.add(panel_26);
+		
+		panel_27 = new JPanel();
+		panel_27.setLayout(null);
+		panel_27.setBackground(Color.WHITE);
+		panel_27.setBounds(0, 0, 438, 82);
+		panel_26.add(panel_27);
+		
+		lblNewLabel_11 = new JLabel("");
+		lblNewLabel_11.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/generica.png")));
+		lblNewLabel_11.setBounds(0, 0, 60, 82);
+		panel_27.add(lblNewLabel_11);
+		
+		lblPathPin = new JTextArea();
+		lblPathPin.setWrapStyleWord(true);
+		lblPathPin.setText("pathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFilepathToFile");
+		lblPathPin.setRows(3);
+		lblPathPin.setLineWrap(true);
+		lblPathPin.setFont(new Font("Dialog", Font.PLAIN, 15));
+		lblPathPin.setEditable(false);
+		lblPathPin.setBackground(Color.WHITE);
+		lblPathPin.setBounds(70, 18, 368, 64);
+		panel_27.add(lblPathPin);
+		
+		panel_28 = new JPanel();
+		panel_28.setBackground(SystemColor.text);
+		panel_28.setBounds(48, 392, 360, 23);
+		panel_26.add(panel_28);
+		panel_28.setLayout(null);
+		
+		btnAnnullaOp_4 = new JButton("Annulla");
+		btnAnnullaOp_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(cbGraphicSig.isSelected())
+				{
+					tabbedPane.setSelectedIndex(13);
+				}else {
+					tabbedPane.setSelectedIndex(12);
+				}
+			}
+		});
+		btnAnnullaOp_4.setBounds(0, 0, 136, 23);
+		panel_28.add(btnAnnullaOp_4);
+		btnAnnullaOp_4.setForeground(Color.WHITE);
+		btnAnnullaOp_4.setBackground(new Color(30, 144, 255));
+		
+		btnAnnullaOp_5 = new JButton("FIRMA");
+		btnAnnullaOp_5.setBounds(224, 0, 136, 23);
+		panel_28.add(btnAnnullaOp_5);
+		btnAnnullaOp_5.setForeground(Color.WHITE);
+		btnAnnullaOp_5.setBackground(new Color(30, 144, 255));
+		
+		panel_29 = new JPanel();
+		panel_29.setBackground(SystemColor.text);
+		panel_29.setBounds(25, 153, 400, 141);
+		panel_26.add(panel_29);
+		panel_29.setLayout(null);
+		
+		lblNewLabel1_1 = new JLabel("");
+		lblNewLabel1_1.setBounds(0, 0, 141, 141);
+		panel_29.add(lblNewLabel1_1);
+		lblNewLabel1_1.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/icona_lettore_card_white_small.png")));
+		lblNewLabel1_1.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		lblNewLabel_13 = new JLabel("Inserisci le ultime 4 cifre del pin");
+		lblNewLabel_13.setBounds(172, 21, 228, 23);
+		panel_29.add(lblNewLabel_13);
+		lblNewLabel_13.setFont(new Font("Dialog", Font.BOLD, 15));
+		
+		JProgressBar progressBar_1 = new JProgressBar();
+		progressBar_1.setBounds(172, 53, 220, 14);
+		panel_29.add(progressBar_1);
+		
+		passwordField_8 = new JPasswordField();
+		passwordField_8.setBounds(211, 53, 25, 25);
+		panel_29.add(passwordField_8);
+		passwordField_8.setHorizontalAlignment(SwingConstants.CENTER);
+		passwordField_8.setFont(new Font("Dialog", Font.BOLD, 25));
+		passwordField_8.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(e.getKeyChar() < '0' || e.getKeyChar() > '9')
+				{
+					e.consume();
+				}
+				else
+					passwordField_9.requestFocus();
+			}
+		});
+		
+		passwordField_9 = new JPasswordField();
+		passwordField_9.setBounds(248, 53, 25, 25);
+		panel_29.add(passwordField_9);
+		passwordField_9.setHorizontalAlignment(SwingConstants.CENTER);
+		passwordField_9.setFont(new Font("Dialog", Font.BOLD, 25));
+		passwordField_9.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				if(e.getKeyChar() == '\b')
+				{
+					passwordField_8.setText("");
+					passwordField_8.requestFocus();
+				}
+				else if(e.getKeyChar() < '0' || e.getKeyChar() > '9')
+				{
+					e.consume();
+				}
+				else
+					passwordField_10.requestFocus();
+			}
+		});
+		
+		passwordField_10 = new JPasswordField();
+		passwordField_10.setBounds(285, 53, 25, 25);
+		panel_29.add(passwordField_10);
+		passwordField_10.setHorizontalAlignment(SwingConstants.CENTER);
+		passwordField_10.setFont(new Font("Dialog", Font.BOLD, 25));
+		passwordField_10.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				
+				if(e.getKeyChar() == '\b')
+				{
+					passwordField_9.setText("");
+					passwordField_9.requestFocus();
+				}
+				else if(e.getKeyChar() < '0' || e.getKeyChar() > '9')
+				{
+					e.consume();
+				}
+				else
+					passwordField_11.requestFocus();
+			}
+		});
+		
+		passwordField_11 = new JPasswordField();
+		passwordField_11.setBounds(323, 53, 25, 25);
+		panel_29.add(passwordField_11);
+		passwordField_11.setHorizontalAlignment(SwingConstants.CENTER);
+		passwordField_11.setFont(new Font("Dialog", Font.BOLD, 25));
+		passwordField_11.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(e.getKeyChar() == '\n' || e.getKeyChar() == '\r')
+				{					
+					abbinaCIE();				
+				}
+				else if(e.getKeyChar() == '\b')
+				{
+					passwordField_10.setText("");
+					passwordField_10.requestFocus();
+				}
+				else if(e.getKeyChar() < '0' || e.getKeyChar() > '9')
+				{
+					e.consume();
+				}
+				else if(passwordField_11.getText().length() > 0)
+				{
+					e.consume();
+				}
+			}
+		});
+		
+		passwordSignFields[0] = passwordField_8;
+		passwordSignFields[1] = passwordField_9;
+		passwordSignFields[2] = passwordField_10;
+		passwordSignFields[3] = passwordField_11;
+	
+		
+		lblEsitoFirma = new JLabel("File firmato con successo");
+		lblEsitoFirma.setBounds(221, 64, 166, 23);
+		panel_29.add(lblEsitoFirma);
+		lblEsitoFirma.setFont(new Font("Dialog", Font.PLAIN, 14));
+		
+		imgEsitoFirma = new JLabel("");
+		imgEsitoFirma.setBounds(172, 53, 48, 48);
+		panel_29.add(imgEsitoFirma);
+		imgEsitoFirma.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/check.png")));
+		imgEsitoFirma.setVisible(false);
+		lblEsitoFirma.setVisible(false);
+		progressBar_1.setVisible(false);
+		
+		lblNewLabel_12 = new JLabel("Appoggia la carta sul lettore");
+		lblNewLabel_12.setFont(new Font("Dialog", Font.PLAIN, 17));
+		lblNewLabel_12.setBounds(175, 82, 218, 39);
+		firmaPin.add(lblNewLabel_12);
+		
+		personalizzaFirma = new JPanel();
+		personalizzaFirma.setLayout(null);
+		personalizzaFirma.setBackground(Color.WHITE);
+		tabbedPane.addTab("New tab", null, personalizzaFirma, null);
+		
+		lblFirmaElettronica_5 = new JLabel("Firma Elettronica");
+		lblFirmaElettronica_5.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica_5.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica_5.setBounds(165, 45, 245, 39);
+		personalizzaFirma.add(lblFirmaElettronica_5);
+		
+		JPanel panel_30 = new JPanel();
+		panel_30.setBackground(Color.WHITE);
+		panel_30.setBounds(76, 132, 449, 415);
+		personalizzaFirma.add(panel_30);
+		panel_30.setLayout(null);
+		
+		panel_31 = new JPanel();
+		panel_31.setBackground(Color.WHITE);
+		panel_31.setBounds(52, 392, 349, 23);
+		panel_30.add(panel_31);
+		panel_31.setLayout(null);
+		
+		JButton btnAnnullaOp_6_1 = new JButton("Seleziona un file");
+		btnAnnullaOp_6_1.setBounds(213, 0, 136, 23);
+		panel_31.add(btnAnnullaOp_6_1);
+		btnAnnullaOp_6_1.setForeground(Color.WHITE);
+		btnAnnullaOp_6_1.setBackground(new Color(30, 144, 255));
+		
+		btnAnnullaOp_6 = new JButton("Indietro");
+		btnAnnullaOp_6.setBounds(0, 0, 136, 23);
+		panel_31.add(btnAnnullaOp_6);
+		btnAnnullaOp_6.setForeground(Color.WHITE);
+		btnAnnullaOp_6.setBackground(new Color(30, 144, 255));
+		
+		JTextArea txtrAbbiamoCreatoPer_1 = new JTextArea();
+		txtrAbbiamoCreatoPer_1.setBounds(0, 133, 439, 64);
+		panel_30.add(txtrAbbiamoCreatoPer_1);
+		txtrAbbiamoCreatoPer_1.setWrapStyleWord(true);
+		txtrAbbiamoCreatoPer_1.setText("Abbiamo creato per te una firma grafica, ma se preferisci puoi personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
+		txtrAbbiamoCreatoPer_1.setRows(3);
+		txtrAbbiamoCreatoPer_1.setLineWrap(true);
+		txtrAbbiamoCreatoPer_1.setFont(new Font("Dialog", Font.PLAIN, 15));
+		txtrAbbiamoCreatoPer_1.setEditable(false);
+		txtrAbbiamoCreatoPer_1.setBackground(Color.WHITE);
+		
+		JTextArea txtrAbbiamoCreatoPer_1_1 = new JTextArea();
+		txtrAbbiamoCreatoPer_1_1.setBounds(0, 280, 439, 64);
+		panel_30.add(txtrAbbiamoCreatoPer_1_1);
+		txtrAbbiamoCreatoPer_1_1.setWrapStyleWord(true);
+		txtrAbbiamoCreatoPer_1_1.setText("Puoi caricare un file in formato PNG, se non hai un file contenente una firma grafica puoi realizzarne uno utilizzando l'app CieSign disponibile per smartphone iOS o Android");
+		txtrAbbiamoCreatoPer_1_1.setRows(3);
+		txtrAbbiamoCreatoPer_1_1.setLineWrap(true);
+		txtrAbbiamoCreatoPer_1_1.setFont(new Font("Dialog", Font.PLAIN, 15));
+		txtrAbbiamoCreatoPer_1_1.setEditable(false);
+		txtrAbbiamoCreatoPer_1_1.setBackground(Color.WHITE);
+		
+		JLabel lblFirmaPersonalizzata = new JLabel("");
+		lblFirmaPersonalizzata.setBounds(0, 0, 449, 93);
+		panel_30.add(lblFirmaPersonalizzata);
+		
 		if(args.length > 0 && args[0].equals("unlock"))
 		{
 			selectUnlock();
@@ -1029,9 +1999,21 @@ public class MainFrame extends JFrame {
 		btnHome.setBackground(SystemColor.control);
 		btnSbloccaCarta.setBackground(SystemColor.control);
 		btnTutorial.setBackground(SystemColor.control);
+		btnFirma.setBackground(SystemColor.control);
 		
 		button.setBackground(SystemColor.LIGHT_GRAY);
 		
+	}
+	
+	
+
+	private String getFileExtension(String name) {
+	    int lastIndexOf = name.lastIndexOf(".");
+	    if (lastIndexOf == -1) {
+	        return ""; // empty extension
+	    }
+	    System.out.println(name.substring(lastIndexOf));
+	    return name.substring(lastIndexOf);
 	}
 	
 	private void abbinaCIE()
