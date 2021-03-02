@@ -46,8 +46,8 @@ public class PdfPreview {
     	imgPanel = new JPanel();
 		imgPanel.setLayout(new BorderLayout(0,0));
 		imgPanel.setBackground(Color.white);
-
-		imgPanel.add(new MoveablePicture(signImagePath));
+		signImage = new MoveablePicture(signImagePath);
+		imgPanel.add(signImage );
 		imgPanel.add(imgLabel);
 		
 		try {
@@ -149,10 +149,26 @@ public class PdfPreview {
 		showPreview();
     }
     
-    
-    private Map<String, Float> signImageInfos()
+    public int getSelectedPage()
     {
-    	return null;
+    	return pdfPageIndex;
+    }
+    
+    public float[] signImageInfos()
+    {
+    	float infos[] = new float[4];
+    	
+    	float x = ((float)signImage.getX() / (float)imgPanel.getWidth());
+    	float y = ((float)(signImage.getY() + signImage.getHeight())/ (float)imgPanel.getHeight());
+    	float w = ((float)signImage.getWidth() / (float)imgPanel.getWidth());
+    	float h = ((float)signImage.getHeight() / (float)imgPanel.getHeight());
+    	
+    	infos[0] = x;
+    	infos[1] = y;
+    	infos[2] = w;
+    	infos[3] = h;
+    	
+    	return infos;
     }
     
 }

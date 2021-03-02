@@ -8,7 +8,7 @@ CIEVerify::CIEVerify()
 
 long CIEVerify::verify(const char* input_file, VERIFY_RESULT* verifyResult)
 {
-	
+
 		try {
 
 			DISIGON_CTX ctx;

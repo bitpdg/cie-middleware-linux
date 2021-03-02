@@ -8,18 +8,8 @@ CIESign::CIESign(IAS *ias){
 
 }
 
-
-
 uint16_t CIESign::sign(const char* inFilePath, const char* type, const char* pin, int page, float x, float y, float w, float h, const char* imagePathFile,const char* outFilePath)
 {
-	/*
-		url e outFilePath deve avere il path assoluto
-		
-		verificare a cosa serve qua dentro id servizi
-
-		Il chiamante dovr� passare il path dell0'immagine e verificare se
-		� stata aggiunta un'immagine custom o meno
-	*/
 
 	uint16_t response;
 
@@ -29,6 +19,7 @@ uint16_t CIESign::sign(const char* inFilePath, const char* type, const char* pin
 	try
 	{
 		ctx = disigon_sign_init();
+
 
 		ret = disigon_set(DISIGON_OPT_LOG_FILE, (void*)"F:\\Projects\\IPZS\\TestFirmaCIE\\log.txt");
 
@@ -104,11 +95,14 @@ uint16_t CIESign::sign(const char* inFilePath, const char* type, const char* pin
 				throw ret;
 			}
 
-			ret = disigon_sign_set(ctx, DISIGON_OPT_PDF_IMAGEPATH, (void*)imagePathFile);
-			if (ret != 0)
-			{
-				throw ret;
-			}
+            if (imagePathFile)
+            {
+                ret = disigon_sign_set(ctx, DISIGON_OPT_PDF_IMAGEPATH, (void*)imagePathFile);
+                if (ret != 0)
+                {
+                    throw ret;
+                }
+            }
 
 			ret = disigon_sign_set(ctx, DISIGON_OPT_INPUTFILE_TYPE, (void*)DISIGON_FILETYPE_PDF);
 			if (ret != 0)
@@ -118,11 +112,10 @@ uint16_t CIESign::sign(const char* inFilePath, const char* type, const char* pin
 		}
 		else {
 
-			//TODO renderlo case insensitive
 			if ((strstr(inFilePath, "p7m") != NULL) || (strstr(inFilePath, "p7s") != NULL))
 				ret = disigon_sign_set(ctx, DISIGON_OPT_INPUTFILE_TYPE, (void*)DISIGON_FILETYPE_P7M);
-			else
-				ret = disigon_sign_set(ctx, DISIGON_OPT_INPUTFILE_TYPE, (void*)DISIGON_FILETYPE_PLAINTEXT);
+            else
+                ret = disigon_sign_set(ctx, DISIGON_OPT_INPUTFILE_TYPE, (void*)DISIGON_FILETYPE_PLAINTEXT);
 
 			if (ret != 0)
 			{
