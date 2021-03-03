@@ -5,6 +5,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.SystemColor;
@@ -12,11 +16,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -39,6 +47,9 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.lf5.util.ResourceUtils;
+
 import com.ugos.util.Runner;
 
 import it.ipzs.cieid.util.Utils;
@@ -49,19 +60,28 @@ import java.awt.FlowLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.lowagie.text.pdf.codec.Base64;
+
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.awt.image.BufferedImage;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.GridLayout;
+import java.awt.Image;
+
 import javax.swing.BoxLayout;
 import java.awt.GridBagLayout;
 
@@ -190,7 +210,7 @@ public class MainFrame extends JFrame {
 	private JTextArea txtrOppure;
 	private JButton btnSelezionaUnDocumento;
 	private JPanel panel_11;
-	private JTextArea txtrAbbiamoCreatoPer;
+	private JTextArea lblSFP;
 	private JLabel lblPersonalizza;
 	private JLabel lblNewLabel_2;
 	private JPanel selectOperation;
@@ -263,6 +283,10 @@ public class MainFrame extends JFrame {
 	private JProgressBar progressFirmaPin;
 	private JButton btnConcludiFirma; 
 	PdfPreview preview;
+	private JButton btnSelezionaCIE;
+	private JLabel lblFirmaPersonalizzata;
+	private JTextArea lblHint;
+	private JLabel lblFPOK;
 	
 	private enum SignOp
 	{
@@ -413,7 +437,16 @@ public class MainFrame extends JFrame {
 		btnFirma.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectButton(btnFirma);
-				tabbedPane.setSelectedIndex(10);
+				
+				txtpnCieAbbinataCon.setText("Seleziona la CIE da usare");
+				lblCieId.setText("Firma Elettronica");
+				
+				btnSelezionaCIE.setVisible(true);
+				btnRemoveAll.setVisible(false);
+				btnRemoveSelected.setVisible(false);
+				btnNewButton.setVisible(false);
+				
+				tabbedPane.setSelectedIndex(2);
 			}
 		});
 		
@@ -781,6 +814,35 @@ public class MainFrame extends JFrame {
 		btnPanel.add(btnNewButton);
 
 		panel_3.add(btnPanel);
+		
+		btnSelezionaCIE = new JButton("Seleziona");
+		btnSelezionaCIE.setForeground(Color.WHITE);
+		btnSelezionaCIE.setBackground(new Color(30, 144, 255));
+		btnSelezionaCIE.setVisible(false);
+
+		btnSelezionaCIE.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CieCard selectedCIE = getSelectedCIE();
+				
+				if(selectedCIE.getCard().getIsCustomSign())
+				{
+				    lblPersonalizza.setText("Aggiorna");
+				    lblHint.setText("Un tua firma personalizzata è già stata caricata. Vuoi aggiornarla?");
+				    lblSFP.setText("Firma personalzzata correttamente");
+				}else
+				{
+				    lblPersonalizza.setText("Personalizza");
+				    lblHint.setText("Abbiamo creato per te una firma grafica, ma se preferisci puo personalizzarla. "
+				    		+ "Questo passaggio non è indispensabile, ma ti consentirà di dare un tocco personale ai documenti firmati.");
+				    lblSFP.setVisible(true);
+				    lblFPOK.setVisible(false);
+
+				}
+				
+				tabbedPane.setSelectedIndex(10);
+			}
+		});
+		btnPanel.add(btnSelezionaCIE);
 		
 		lblCieId = new JLabel("CIE ID");
 		lblCieId.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1170,7 +1232,6 @@ public class MainFrame extends JFrame {
 	          {   
 	              // handle file drop
 	              filePath = files[0].getAbsolutePath();
-	              System.out.println(filePath);
 	              lblPathOp.setText(filePath);
 	              tabbedPane.setSelectedIndex(11);
 	          }   // end filesDropped
@@ -1212,7 +1273,6 @@ public class MainFrame extends JFrame {
 			    {
 			        File selectedFile = fileChooser.getSelectedFile();
 			        filePath = selectedFile.getAbsolutePath();
-			        System.out.println(filePath);
 			        
 			        lblPathOp.setText(filePath);
 			        tabbedPane.setSelectedIndex(11);
@@ -1230,27 +1290,68 @@ public class MainFrame extends JFrame {
 		panel_24.add(panel_11);
 		panel_11.setLayout(null);
 		
-		txtrAbbiamoCreatoPer = new JTextArea();
-		txtrAbbiamoCreatoPer.setWrapStyleWord(true);
-		txtrAbbiamoCreatoPer.setText("Abbiamo creato per te una firma grafica, ma se preferisci puo personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
-		txtrAbbiamoCreatoPer.setRows(3);
-		txtrAbbiamoCreatoPer.setLineWrap(true);
-		txtrAbbiamoCreatoPer.setFont(new Font("Dialog", Font.PLAIN, 12));
-		txtrAbbiamoCreatoPer.setEditable(false);
-		txtrAbbiamoCreatoPer.setBackground(SystemColor.text);
-		txtrAbbiamoCreatoPer.setBounds(81, 1, 346, 64);
-		panel_11.add(txtrAbbiamoCreatoPer);
+		lblSFP = new JTextArea();
+		lblSFP.setWrapStyleWord(true);
+		lblSFP.setText("Abbiamo creato per te una firma grafica, ma se preferisci puo personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
+		lblSFP.setRows(3);
+		lblSFP.setLineWrap(true);
+		lblSFP.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblSFP.setEditable(false);
+		lblSFP.setBackground(SystemColor.text);
+		lblSFP.setBounds(80, 1, 346, 64);
+		panel_11.add(lblSFP);
 		
 		lblPersonalizza = new JLabel("Personalizza");
+		lblPersonalizza.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				Font font = lblPersonalizza.getFont();
+				Map attributes = font.getAttributes();
+				attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+				lblPersonalizza.setFont(font.deriveFont(attributes));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				
+				CieCard selectedCie = getSelectedCIE();
+			    String signImagePath = getSignImagePath(selectedCie.getCard().getSerialNumber());
+			    Image signImage;
+				try {
+					signImage = ImageIO.read(new File(signImagePath));
+				    ImageIcon imageIcon = new ImageIcon();
+				    
+				    imageIcon.setImage(signImage.getScaledInstance(lblFirmaPersonalizzata.getWidth(), lblFirmaPersonalizzata.getHeight(), Image.SCALE_SMOOTH));
+				    lblFirmaPersonalizzata.setIcon(imageIcon);
+					tabbedPane.setSelectedIndex(15);
+				} catch (IOException e1) {
+
+				    lblFirmaPersonalizzata.setText("Immagine firma personalizzata non trovata");
+				}
+
+			}
+		@Override
+			public void mouseExited(MouseEvent e) {
+			Font font = lblPersonalizza.getFont();
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, null);
+			lblPersonalizza.setFont(font.deriveFont(attributes));
+			}
+		});
 		lblPersonalizza.setForeground(new Color(30, 144, 255));
-		lblPersonalizza.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblPersonalizza.setBounds(448, 12, 80, 25);
+		lblPersonalizza.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblPersonalizza.setBounds(436, 12, 95, 25);
+
 		panel_11.add(lblPersonalizza);
 		
 		lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/firma@4x.png")));
 		lblNewLabel_2.setBounds(0, 1, 79, 64);
 		panel_11.add(lblNewLabel_2);
+		
+		lblFPOK = new JLabel("Firma personalizzata correttamente");
+		lblFPOK.setBounds(80, 12, 245, 53);
+		panel_11.add(lblFPOK);
 		
 		selectOperation = new JPanel();
 		selectOperation.setBackground(SystemColor.text);
@@ -1829,7 +1930,6 @@ public class MainFrame extends JFrame {
 			            if (!outfilePath.endsWith(fileExtension))
 			            	outfilePath += fileExtension;
 			            
-			        	System.out.println(outfilePath);
 			        	firma(outfilePath);
 			        }
 				}
@@ -1994,7 +2094,7 @@ public class MainFrame extends JFrame {
 		lblFirmaElettronica_5 = new JLabel("Firma Elettronica");
 		lblFirmaElettronica_5.setHorizontalAlignment(SwingConstants.CENTER);
 		lblFirmaElettronica_5.setFont(new Font("Dialog", Font.BOLD, 30));
-		lblFirmaElettronica_5.setBounds(165, 45, 245, 39);
+		lblFirmaElettronica_5.setBounds(149, 45, 306, 39);
 		personalizzaFirma.add(lblFirmaElettronica_5);
 		
 		JPanel panel_30 = new JPanel();
@@ -2008,32 +2108,84 @@ public class MainFrame extends JFrame {
 		panel_31.setBounds(52, 392, 349, 23);
 		panel_30.add(panel_31);
 		panel_31.setLayout(null);
-		
-		JButton btnAnnullaOp_6_1 = new JButton("Seleziona un file");
-		btnAnnullaOp_6_1.setBounds(213, 0, 136, 23);
-		panel_31.add(btnAnnullaOp_6_1);
-		btnAnnullaOp_6_1.setForeground(Color.WHITE);
-		btnAnnullaOp_6_1.setBackground(new Color(30, 144, 255));
+		JButton btnSelectImg = new JButton("Seleziona un file");
+		btnSelectImg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("Png file", "png", "PNG");
+				fileChooser.setFileFilter(filter);
+				
+			    int returnValue = fileChooser.showOpenDialog(null);
+			    
+			    if (returnValue == JFileChooser.APPROVE_OPTION)
+			    {
+			        File selectedFile = fileChooser.getSelectedFile();
+			        String source = selectedFile.getAbsolutePath();
+			        
+					CieCard selectedCie = getSelectedCIE();
+					String dest = getSignImagePath(selectedCie.getCard().getSerialNumber());
+			        
+			        try {
+			        	
+			            FileUtils.copyFile(new File(source), new File(dest));
+						Image signImage = ImageIO.read(new File(dest));
+					    ImageIcon imageIcon = new ImageIcon();
+					    
+					    imageIcon.setImage(signImage.getScaledInstance(lblFirmaPersonalizzata.getWidth(), lblFirmaPersonalizzata.getHeight(), Image.SCALE_SMOOTH));
+					    lblFirmaPersonalizzata.setIcon(imageIcon);
+					    
+					    lblPersonalizza.setText("Aggiorna");
+					    lblHint.setText("Una tua firma personalizzata è già stata caricata. Vuoi aggiornarla?");
+					    lblSFP.setVisible(false);
+					    lblFPOK.setVisible(true);
+					    
+					    selectedCie.getCard().setIsCustomSign(true);
+					    
+					    cieDictionary.put(selectedCie.getCard().getPan(), selectedCie.getCard());
+					    
+					    Gson gson = new Gson();
+						String serialDictionary = gson.toJson(cieDictionary);
+						Utils.setProperty("cieDictionary", serialDictionary);	
+
+			        } catch (IOException er) {
+			            er.printStackTrace();
+			            lblFirmaPersonalizzata.setText("Errore nel caricamento della firma personalizzata");
+			        }
+
+
+			    }
+			    
+			}
+		});
+		btnSelectImg.setBounds(197, 0, 152, 23);
+		panel_31.add(btnSelectImg);
+		btnSelectImg.setForeground(Color.WHITE);
+		btnSelectImg.setBackground(new Color(30, 144, 255));
 		
 		btnAnnullaOp_6 = new JButton("Indietro");
-		btnAnnullaOp_6.setBounds(0, 0, 136, 23);
+		btnAnnullaOp_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				tabbedPane.setSelectedIndex(10);
+			}
+		});
+		btnAnnullaOp_6.setBounds(0, 0, 152, 23);
 		panel_31.add(btnAnnullaOp_6);
 		btnAnnullaOp_6.setForeground(Color.WHITE);
 		btnAnnullaOp_6.setBackground(new Color(30, 144, 255));
 		
-		JTextArea txtrAbbiamoCreatoPer_1 = new JTextArea();
-		txtrAbbiamoCreatoPer_1.setBounds(0, 133, 439, 64);
-		panel_30.add(txtrAbbiamoCreatoPer_1);
-		txtrAbbiamoCreatoPer_1.setWrapStyleWord(true);
-		txtrAbbiamoCreatoPer_1.setText("Abbiamo creato per te una firma grafica, ma se preferisci puoi personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
-		txtrAbbiamoCreatoPer_1.setRows(3);
-		txtrAbbiamoCreatoPer_1.setLineWrap(true);
-		txtrAbbiamoCreatoPer_1.setFont(new Font("Dialog", Font.PLAIN, 15));
-		txtrAbbiamoCreatoPer_1.setEditable(false);
-		txtrAbbiamoCreatoPer_1.setBackground(Color.WHITE);
+		lblHint = new JTextArea();
+		lblHint.setBounds(0, 133, 439, 80);
+		panel_30.add(lblHint);
+		lblHint.setWrapStyleWord(true);
+		lblHint.setText("Abbiamo creato per te una firma grafica, ma se preferisci puoi personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
+		lblHint.setRows(3);
+		lblHint.setLineWrap(true);
+		lblHint.setFont(new Font("Dialog", Font.PLAIN, 15));
+		lblHint.setEditable(false);
+		lblHint.setBackground(Color.WHITE);
 		
 		JTextArea txtrAbbiamoCreatoPer_1_1 = new JTextArea();
-		txtrAbbiamoCreatoPer_1_1.setBounds(0, 280, 439, 64);
+		txtrAbbiamoCreatoPer_1_1.setBounds(0, 280, 439, 72);
 		panel_30.add(txtrAbbiamoCreatoPer_1_1);
 		txtrAbbiamoCreatoPer_1_1.setWrapStyleWord(true);
 		txtrAbbiamoCreatoPer_1_1.setText("Puoi caricare un file in formato PNG, se non hai un file contenente una firma grafica puoi realizzarne uno utilizzando l'app CieSign disponibile per smartphone iOS o Android");
@@ -2043,7 +2195,7 @@ public class MainFrame extends JFrame {
 		txtrAbbiamoCreatoPer_1_1.setEditable(false);
 		txtrAbbiamoCreatoPer_1_1.setBackground(Color.WHITE);
 		
-		JLabel lblFirmaPersonalizzata = new JLabel("");
+		lblFirmaPersonalizzata = new JLabel("");
 		lblFirmaPersonalizzata.setBounds(0, 0, 449, 93);
 		panel_30.add(lblFirmaPersonalizzata);
 		
@@ -2080,7 +2232,6 @@ public class MainFrame extends JFrame {
 	{
 		String home = System.getProperty("user.home");
 		String signPath = home + "/.CIEPKI/" + serialNumber+"_default.png";
-		System.out.println(signPath);
 		
 		return signPath;
 	}
@@ -2090,10 +2241,52 @@ public class MainFrame extends JFrame {
 	    if (lastIndexOf == -1) {
 	        return ""; // empty extension
 	    }
-	    System.out.println(name.substring(lastIndexOf));
 	    return name.substring(lastIndexOf);
 	}
 	
+	
+	private void drawText(String text, String path)
+	{
+	    BufferedImage bufferedImage = new BufferedImage(1, 1,
+	        BufferedImage.TYPE_INT_RGB);
+	    
+	    
+	    Graphics graphics = bufferedImage.getGraphics();
+
+	    
+		try {
+
+			File file = new File(MainFrame.class.getResource("/it/ipzs/cieid/res/Allura-Regular.ttf").getFile());
+			InputStream is = new FileInputStream(file);
+
+			Font customFont = Font.createFont(Font.TRUETYPE_FONT, is); 
+		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		    //register the font
+		    ge.registerFont(customFont);
+		    
+		    graphics.setFont(customFont.deriveFont(Font.LAYOUT_LEFT_TO_RIGHT, 150f));
+		    FontMetrics fM = graphics.getFontMetrics();
+		    bufferedImage = new BufferedImage(fM.stringWidth(text), fM.getHeight(),
+			        BufferedImage.TYPE_INT_RGB);
+			    
+			graphics = bufferedImage.getGraphics();
+			graphics.setFont(customFont.deriveFont(Font.LAYOUT_LEFT_TO_RIGHT, 150f));
+		    graphics.setColor(Color.white);
+		    graphics.fillRect(0, 0, fM.stringWidth(text), fM.getHeight());
+		    graphics.setColor(Color.BLACK);
+		    graphics.drawString(text, 0, fM.getAscent());
+			
+		    
+		    ImageIO.write(bufferedImage, "png", new File(path));
+		} catch (FontFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
 	
 	
 	private void firma(String outFilePath)
@@ -2878,6 +3071,10 @@ public class MainFrame extends JFrame {
 	
 	private void configureHomeButtons(Map<String, Cie> cieDictionary)
 	{
+		btnSelezionaCIE.setVisible(false);
+		btnNewButton.setVisible(true);
+		btnRemoveSelected.setVisible(true);
+		
 		if(cieDictionary.size() > 1)
 		{
 			btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
@@ -2939,6 +3136,8 @@ public class MainFrame extends JFrame {
 		//Utils.setProperty("cieDictionary", "");
 		
 
+		txtpnCieAbbinataCon.setText("Con Carta di identità elettronica abbinata correttamente");
+		lblCieId.setText("CieId");
 		
 		if(!Utils.getProperty("serialnumber", "").equals(""))
 		{
@@ -2968,7 +3167,23 @@ public class MainFrame extends JFrame {
 				Gson gson = new Gson();
 				java.lang.reflect.Type type = new TypeToken<HashMap<String, Cie>>(){}.getType();
 				cieDictionary = gson.fromJson(Utils.getProperty("cieDictionary", ""), type);
-				//cieDictionary.remove("");
+				
+				for (String key : cieDictionary.keySet()) {
+				    if(cieDictionary.get(key).getIsCustomSign() == null)
+				    {
+				    	cieDictionary.get(key).setIsCustomSign(false);
+					    String name = cieDictionary.get(key).getName().toLowerCase();
+					    name = toFirstCharUpperAll(toTitleCase(name));
+
+					    System.out.println(name);
+					    String signPath = getSignImagePath(cieDictionary.get(key).getSerialNumber());
+					    drawText(name, signPath);
+				    }
+				}
+				
+				String serialDictionary = gson.toJson(cieDictionary);
+				Utils.setProperty("cieDictionary", serialDictionary);	
+				
 				cieCarousel.configureCards(cieDictionary);
 				tabbedPane.setSelectedIndex(2);
 			}else
@@ -2985,10 +3200,35 @@ public class MainFrame extends JFrame {
 		        });
 			}
 		}
-		
-		
+				
 		configureHomeButtons(cieDictionary);
 		selectButton(btnHome);
+	}
+	
+	private String toTitleCase(String input) {
+	    StringBuilder titleCase = new StringBuilder(input.length());
+	    boolean nextTitleCase = true;
+
+	    for (char c : input.toCharArray()) {
+	        if (Character.isSpaceChar(c)) {
+	            nextTitleCase = true;
+	        } else if (nextTitleCase) {
+	            c = Character.toTitleCase(c);
+	            nextTitleCase = false;
+	        }
+
+	        titleCase.append(c);
+	    }
+
+	    return titleCase.toString();
+	}
+	
+	private String toFirstCharUpperAll(String string){
+	     StringBuffer sb=new StringBuffer(string);
+	        for(int i=0;i<sb.length();i++)
+	            if(i==0 || sb.charAt(i-1)==' ')//first letter to uppercase by default
+	                sb.setCharAt(i, Character.toUpperCase(sb.charAt(i)));
+	     return sb.toString();
 	}
 	
 	private void selectCardholder()
