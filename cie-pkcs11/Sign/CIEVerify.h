@@ -15,11 +15,6 @@ typedef struct verifyInfo_t {
     bool isCertValid;
 };
 
-typedef struct verifyInfos_t {
-    verifyInfo_t infos[20];
-    int n_infos;
-};
-
 class CIEVerify
 {
 	public:

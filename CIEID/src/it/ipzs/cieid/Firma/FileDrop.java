@@ -1,4 +1,4 @@
-package it.ipzs.cieid;
+package it.ipzs.cieid.Firma;
 
 
 import java.awt.datatransfer.DataFlavor;

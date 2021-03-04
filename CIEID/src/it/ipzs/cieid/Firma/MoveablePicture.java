@@ -1,4 +1,4 @@
-package it.ipzs.pdfPreview;
+package it.ipzs.cieid.Firma;
 
 import java.awt.Color;
 import java.awt.Image;

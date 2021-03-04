@@ -12,5 +12,7 @@
 #include "AbilitaCIE.h"
 #include "../Sign/CIEVerify.h"
 
-typedef CK_RV (*verificaConCIEfn)(const char* inFilePath, verifyInfos_t* vInfos);
+typedef CK_RV (*verificaConCIEfn)(const char* inFilePath);
+typedef CK_RV (*getNumberOfSignfn)(void);
+typedef CK_RV (*getVerifyInfofn)(int index, struct verifyInfo_t* vInfos);
 #endif /* VerificaConCIE_h */

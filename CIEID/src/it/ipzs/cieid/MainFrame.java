@@ -2,21 +2,17 @@ package it.ipzs.cieid;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,7 +20,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -48,42 +43,32 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.lf5.util.ResourceUtils;
 
 import com.ugos.util.Runner;
 
 import it.ipzs.cieid.util.Utils;
-import it.ipzs.pdfPreview.PdfPreview;
-import it.ipzs.cieid.FileDrop;
+import it.ipzs.cieid.Firma.FileDrop;
+import it.ipzs.cieid.Firma.PdfPreview;
+import it.ipzs.cieid.Firma.VerifyTable;
+import it.ipzs.cieid.Middleware.verifyInfo;
 import it.ipzs.carousel.*;
 import java.awt.FlowLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lowagie.text.pdf.codec.Base64;
 
-import java.lang.reflect.Type;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.awt.AlphaComposite;
-import java.awt.BorderLayout;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 
-import javax.swing.border.BevelBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.GridLayout;
 import java.awt.Image;
 
-import javax.swing.BoxLayout;
 import java.awt.GridBagLayout;
+import javax.swing.JScrollPane;
 
 public class MainFrame extends JFrame {
 
@@ -287,7 +272,9 @@ public class MainFrame extends JFrame {
 	private JLabel lblFirmaPersonalizzata;
 	private JTextArea lblHint;
 	private JLabel lblFPOK;
-	
+	private JPanel verifica;
+	private JLabel lblFirmaElettronica_6;
+	private JScrollPane verificaScrollPane;
 	private enum SignOp
 	{
 		OP_NONE,
@@ -1409,6 +1396,32 @@ public class MainFrame extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				panel_14.setBorder(null);
 			}
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+								
+				
+				final int ret = Middleware.INSTANCE.verificaConCIE(filePath);
+				
+				if(ret > 0)
+				{
+					int nSign = Middleware.INSTANCE.getNumberOfSign();
+
+					VerifyTable vTable = new VerifyTable(verificaScrollPane);
+					verifyInfo vInfo = new verifyInfo();
+					verifyInfo[] vInfos = (verifyInfo[])vInfo.toArray(nSign);
+					
+					for(int i = 0; i<nSign; i++)
+					{
+						Middleware.INSTANCE.getVerifyInfo(i, vInfos[i]);
+						vInfos[i].printVerifyInfo();
+						vTable.addDataToModel(verificaScrollPane, vInfos[i]);
+					}
+				};
+				
+				verificaScrollPane.repaint();
+				tabbedPane.setSelectedIndex(16);
+				
+			}
 		});
 		panel_14.setBounds(0, 115, 228, 93);
 		panel_12.add(panel_14);
@@ -2198,6 +2211,21 @@ public class MainFrame extends JFrame {
 		lblFirmaPersonalizzata = new JLabel("");
 		lblFirmaPersonalizzata.setBounds(0, 0, 449, 93);
 		panel_30.add(lblFirmaPersonalizzata);
+		
+		verifica = new JPanel();
+		verifica.setLayout(null);
+		verifica.setBackground(Color.WHITE);
+		tabbedPane.addTab("New tab", null, verifica, null);
+		
+		lblFirmaElettronica_6 = new JLabel("Firma Elettronica");
+		lblFirmaElettronica_6.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFirmaElettronica_6.setFont(new Font("Dialog", Font.BOLD, 30));
+		lblFirmaElettronica_6.setBounds(149, 45, 306, 39);
+		verifica.add(lblFirmaElettronica_6);
+		
+		verificaScrollPane = new JScrollPane();
+		verificaScrollPane.setBounds(95, 255, 397, 275);
+		verifica.add(verificaScrollPane);
 		
 		if(args.length > 0 && args[0].equals("unlock"))
 		{
