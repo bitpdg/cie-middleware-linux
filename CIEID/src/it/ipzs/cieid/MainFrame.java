@@ -1408,7 +1408,7 @@ public class MainFrame extends JFrame {
 		panel_16.setLayout(null);
 		
 		panel = new JPanel();
-		panel.setBounds(0, 0, 438, 82);
+		panel.setBounds(0, 0, 449, 82);
 		panel_16.add(panel);
 		panel.setBackground(SystemColor.text);
 		panel.setLayout(null);
@@ -1426,7 +1426,7 @@ public class MainFrame extends JFrame {
 		lblPathOp.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblPathOp.setEditable(false);
 		lblPathOp.setBackground(SystemColor.text);
-		lblPathOp.setBounds(70, 18, 368, 64);
+		lblPathOp.setBounds(70, 18, 379, 64);
 		panel.add(lblPathOp);
 		
 		panel_12 = new JPanel();
@@ -1585,7 +1585,7 @@ public class MainFrame extends JFrame {
 		
 		panel_15 = new JPanel();
 		panel_15.setBackground(SystemColor.text);
-		panel_15.setBounds(0, 0, 438, 82);
+		panel_15.setBounds(0, 0, 448, 82);
 		panel_23.add(panel_15);
 		panel_15.setLayout(null);
 		
@@ -1602,7 +1602,7 @@ public class MainFrame extends JFrame {
 		lblPathSignOp.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblPathSignOp.setEditable(false);
 		lblPathSignOp.setBackground(SystemColor.text);
-		lblPathSignOp.setBounds(70, 18, 368, 64);
+		lblPathSignOp.setBounds(70, 18, 378, 64);
 		panel_15.add(lblPathSignOp);
 		
 		panel_20 = new JPanel();
@@ -1847,7 +1847,7 @@ public class MainFrame extends JFrame {
 		
 		panel_21 = new JPanel();
 		panel_21.setBackground(SystemColor.text);
-		panel_21.setBounds(0, 0, 438, 82);
+		panel_21.setBounds(0, 0, 449, 82);
 		panel_25.add(panel_21);
 		panel_21.setLayout(null);
 		
@@ -1864,7 +1864,7 @@ public class MainFrame extends JFrame {
 		lblPathPreview.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblPathPreview.setEditable(false);
 		lblPathPreview.setBackground(SystemColor.text);
-		lblPathPreview.setBounds(70, 18, 368, 64);
+		lblPathPreview.setBounds(70, 18, 379, 64);
 		panel_21.add(lblPathPreview);
 		
 		btnAnnullaOp_3 = new JButton("PROSEGUI");
@@ -1960,7 +1960,7 @@ public class MainFrame extends JFrame {
 		panel_27 = new JPanel();
 		panel_27.setLayout(null);
 		panel_27.setBackground(Color.WHITE);
-		panel_27.setBounds(0, 0, 438, 82);
+		panel_27.setBounds(0, 0, 449, 82);
 		panel_26.add(panel_27);
 		
 		lblNewLabel_11 = new JLabel("");
@@ -1976,7 +1976,7 @@ public class MainFrame extends JFrame {
 		lblPathPin.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblPathPin.setEditable(false);
 		lblPathPin.setBackground(Color.WHITE);
-		lblPathPin.setBounds(70, 18, 368, 64);
+		lblPathPin.setBounds(70, 18, 379, 64);
 		panel_27.add(lblPathPin);
 		
 		panel_28 = new JPanel();
@@ -1997,7 +1997,7 @@ public class MainFrame extends JFrame {
 				}
 			}
 		});
-		btnAnnullaPin.setBounds(0, 0, 136, 23);
+		btnAnnullaPin.setBounds(-12, 0, 136, 23);
 		panel_28.add(btnAnnullaPin);
 		btnAnnullaPin.setForeground(Color.WHITE);
 		btnAnnullaPin.setBackground(new Color(30, 144, 255));
@@ -2082,7 +2082,7 @@ public class MainFrame extends JFrame {
 		
 		panel_29 = new JPanel();
 		panel_29.setBackground(SystemColor.text);
-		panel_29.setBounds(25, 153, 400, 141);
+		panel_29.setBounds(0, 153, 449, 141);
 		panel_26.add(panel_29);
 		panel_29.setLayout(null);
 		
@@ -2214,7 +2214,7 @@ public class MainFrame extends JFrame {
 		
 		lblNewLabel_12 = new JLabel("Appoggia la carta sul lettore");
 		lblNewLabel_12.setFont(new Font("Dialog", Font.PLAIN, 17));
-		lblNewLabel_12.setBounds(175, 82, 256, 39);
+		lblNewLabel_12.setBounds(185, 82, 256, 39);
 		firmaPin.add(lblNewLabel_12);
 		
 		personalizzaFirma = new JPanel();
