@@ -22,13 +22,8 @@ public class VerifyTable {
     private static final int REVOCATION_STATUS_SUSPENDED = 2;
     private static final int REVOCATION_STATUS_UNKNOWN = 3;
     
-    private Icon infoIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/user.png"));
-    private String text = "A capocchia";
-    // Data to be displayed in the JTable 
-    
     Object[][] data = new Object[0][0];
     
-    // Column Names 
     String[] columnNames = {"", ""}; 
 	
 	
@@ -42,11 +37,12 @@ public class VerifyTable {
     	String s_time = vInfo.get_signingTime();
     	Icon timeIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/calendar.png"));
     	
-    	if(s_time.equals(""))
+    	if(s_time != null)
     	{
-    		s_time = "Attributo Signing Time non presente";
-    	}else {
     		//parsing
+    	}else {
+
+    		s_time = "Attributo Signing Time non presente";
     	}
     	
         String s_cert = "Il certificato non è valido";
@@ -126,11 +122,8 @@ public class VerifyTable {
 	        };
 	        
 	    };
-        // Initializing the JTable 
+	    
         updateTable(scrollPane);
-        
-
-		
 	}
 
 	private void updateTable(JScrollPane verificaScrollPane) {
@@ -143,33 +136,53 @@ public class VerifyTable {
                 for (int row = 0; row < getRowCount(); row++) {
                     Component c = prepareRenderer(col.getCellRenderer(), row, 0);
                     if (c instanceof JTextArea) {
-                        JTextArea a = (JTextArea) c;
-                        int h = getContentHeight(a.getText()) + getIntercellSpacing().height;
+                        int h = getContentHeight(row) + getIntercellSpacing().height;
                         if (getRowHeight(row) != h) {
                             setRowHeight(row, h);
                         }
                     }                    
                 }
-                super.doLayout();
-            }            
-            public int getContentHeight(String content) {
-                JEditorPane dummyEditorPane=new JEditorPane();
-                dummyEditorPane.setSize(100,Short.MAX_VALUE);
-                dummyEditorPane.setText(content);
                 
-                return dummyEditorPane.getPreferredSize().height;
+                
+                super.doLayout();
+            }
+            
+            
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
+                
+                if (col == 0 && renderer.getClass() != TextAreaCellRenderer.class) {
+                	JLabel c = (JLabel) super.prepareRenderer(renderer, row, col);
+                    c.setVerticalAlignment(JLabel.TOP);
+                    return c;
+                }else {
+                	return super.prepareRenderer(renderer, row, col);
+                }
+           }
+        
+            
+            public int getContentHeight(int row) {                
+                if((((row+1)%6) == 0))
+                {
+                    return 90;
+                }else 
+                {
+                    return 35;
+                }
             }
         }; 
+        
         table.setTableHeader(null);
         table.removeEditor();
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
         table.setFocusable(false);
         table.getColumnModel().getColumn(1).setCellRenderer(new TextAreaCellRenderer());
+        table.setShowGrid(false);
         table.setAutoResizeMode( JTable.AUTO_RESIZE_LAST_COLUMN );
         
         table.getColumnModel().getColumn(0).setMaxWidth(30);
-
+        //table.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer());
         verificaScrollPane.getViewport().add(table);
         verificaScrollPane.add(Box.createVerticalStrut(20));
 	}
@@ -204,27 +217,20 @@ public class VerifyTable {
 class TextAreaCellRenderer extends JTextArea implements TableCellRenderer {
 
     private static final long serialVersionUID = 1L;
-    private final Color evenColor = new Color(230, 240, 255);
 
     public TextAreaCellRenderer() {
         super();
         setLineWrap(true);
-        setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus, int row, int column) {
-        if (isSelected) {
-            setForeground(table.getSelectionForeground());
-            setBackground(table.getSelectionBackground());
-        } else {
-            setForeground(table.getForeground());
-            setBackground(table.getBackground());
-            setBackground((row % 2 == 0) ? evenColor : getBackground());
-        }
+    	    	
         setFont(table.getFont());
         setText((value == null) ? "" : value.toString());
         return this;
     }
+    
+    
 }

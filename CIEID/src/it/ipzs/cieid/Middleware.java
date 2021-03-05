@@ -76,7 +76,12 @@ public interface Middleware extends Library {
 		}
 		public String get_signingTime()
 		{
-			return byteArrayToString(signingTime);
+			if(signingTime[0] != 0)
+			{
+				return byteArrayToString(signingTime);
+			}
+			
+			return null;
 		}
 		public String get_cadn()
 		{

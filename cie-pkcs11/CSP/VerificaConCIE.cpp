@@ -26,8 +26,7 @@ CK_RV CK_ENTRY verificaConCIE(const char* inFilePath)
 
     if (verifyResult.nErrorCode == 0)
     {
-        printf("verificaConCIE OK");
-        return (CK_RV)verifyResult.verifyInfo.pSignerInfos->nCount;
+        return 0;
     }
     else
     {

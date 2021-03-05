@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,10 +23,11 @@ public class MoveablePicture extends JPanel implements MouseListener, MouseMotio
 		// TODO Auto-generated constructor stub
 		this.setSize(90, 25);
 		this.setBackground(Color.white);
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
 		try {
 			Image img;
 			img = ImageIO.read(new File(signFilePath));
-			JLabel imgLabel = new JLabel(new ImageIcon(img.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH)));
+			JLabel imgLabel = new JLabel(new ImageIcon(img.getScaledInstance(this.getWidth()-5, this.getHeight()-10, Image.SCALE_SMOOTH)));
 			this.add(imgLabel);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
