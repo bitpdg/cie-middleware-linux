@@ -50,7 +50,7 @@ public class VerifyTable {
         if (vInfo.isCertValid == true) 
         {
             s_cert = "Il certificato è valido";
-            certIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/blue_checkbox.png"));
+            certIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/green_box.png"));
         }
     	
         String s_sign = "La firma non è valida";
@@ -58,7 +58,7 @@ public class VerifyTable {
         if (vInfo.isSignValid == true)
         {
             s_sign = "La firma è valida";
-            signIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/blue_checkbox.png"));
+            signIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/green_checkbox.png"));
         }
         
         String s_revoc = "Servizio di revoca non raggiungibile";
@@ -66,7 +66,7 @@ public class VerifyTable {
         if (vInfo.CertRevocStatus == VerifyTable.REVOCATION_STATUS_GOOD)
         {
             s_revoc = "Il certificato non è revocato";
-            certRevIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/blue_checkbox.png"));
+            certRevIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/green_checkbox.png"));
         }
         else if (vInfo.CertRevocStatus == VerifyTable.REVOCATION_STATUS_REVOKED)
         {
@@ -75,6 +75,9 @@ public class VerifyTable {
         else if (vInfo.CertRevocStatus == VerifyTable.REVOCATION_STATUS_SUSPENDED)
         {
             s_revoc = "Il certificato è sospeso";
+        }else if( vInfo.CertRevocStatus == VerifyTable.REVOCATION_STATUS_UNKNOWN)
+        {
+        	s_cert = "Certificato non verificato";
         }
         
         String s_cadn = vInfo.get_cadn(); 

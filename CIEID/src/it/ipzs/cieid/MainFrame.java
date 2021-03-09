@@ -49,6 +49,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import com.ugos.util.Runner;
 
@@ -89,6 +90,7 @@ public class MainFrame extends JFrame {
     public static final int CKR_PIN_LEN_RANGE = 0x000000A2;
     public static final int CARD_ALREADY_ENABLED = 0x000000F0;
     public static final int CARD_PAN_MISMATCH = 0x000000F1;
+    public static final int INVALID_FILE_TYPE = 0x84000005;
 
     /* CKR_PIN_EXPIRED and CKR_PIN_LOCKED are new for v2.0 */
     public static final int CKR_PIN_EXPIRED = 0x000000A3;
@@ -285,6 +287,7 @@ public class MainFrame extends JFrame {
 	private JButton btnConcludiVerifica;
 	private JTextArea lblPathVerifica;
 	private JButton btnProseguiOp;
+	private JButton btnCreaFirma;
 	private enum SignOp
 	{
 		OP_NONE,
@@ -1359,6 +1362,14 @@ public class MainFrame extends JFrame {
 				    imageIcon.setImage(signImage.getScaledInstance(lblFirmaPersonalizzata.getWidth(), lblFirmaPersonalizzata.getHeight(), Image.SCALE_SMOOTH));
 				    lblFirmaPersonalizzata.setIcon(imageIcon);
 					tabbedPane.setSelectedIndex(15);
+					
+					if(selectedCie.getCard().getIsCustomSign())
+					{
+						btnCreaFirma.setEnabled(true);
+					}else {
+						btnCreaFirma.setEnabled(false);
+					}
+					
 				} catch (IOException e1) {
 
 				    lblFirmaPersonalizzata.setText("Immagine firma personalizzata non trovata");
@@ -1454,7 +1465,7 @@ public class MainFrame extends JFrame {
 				@Override
 				public void run() {
 						
-					final int ret = Middleware.INSTANCE.verificaConCIE(filePath);
+					final long ret = Middleware.INSTANCE.verificaConCIE(filePath);
 					
 					if(ret == 0)
 					{
@@ -1479,13 +1490,15 @@ public class MainFrame extends JFrame {
 							verificaScrollPane.repaint();
 							tabbedPane.setSelectedIndex(16);
 						}
+					}else if(ret == (long)INVALID_FILE_TYPE)
+					{
+	                	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Il file selezionato non è un file valido. E' possibile verificare solo file con estensione .p7m o .pdf", "Errore nella verifica", JOptionPane.ERROR_MESSAGE);
+	                	tabbedPane.setSelectedIndex(10);
 					}else
 					{
-	                	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Si è verificato un errore durante la verifica", "Verifica completata", JOptionPane.ERROR_MESSAGE);
+	                	JOptionPane.showMessageDialog(MainFrame.this.getContentPane(), "Si è verificato un errore durante la verifica", "Errore nella verifica", JOptionPane.ERROR_MESSAGE);
 	                	tabbedPane.setSelectedIndex(10);
 					}
-					
-
 				}
 			});
 			}
@@ -2015,17 +2028,22 @@ public class MainFrame extends JFrame {
 			        JFileChooser fileChooser = new JFileChooser();
 			        fileChooser.setAcceptAllFileFilterUsed(false);
 
+			        String fileName = FilenameUtils.getBaseName(filePath);
+			        
 				    fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 				    fileChooser.setDialogTitle("Seleziona il percorso in cui salvare il file");
 			        FileNameExtensionFilter filter; 
 			        if(signOperation == signOperation.PADES)
 			        {
+			        	fileName = fileName + "_signed.pdf";
 				        filter = new FileNameExtensionFilter("File pdf",".pdf");
 			        }else
 			        {
+			        	fileName = fileName + "_signed.p7m";
 			        	filter = new FileNameExtensionFilter("File p7m",".p7m");
 			        }
-			        
+
+				    fileChooser.setSelectedFile(new File(fileName));
 			        fileChooser.addChoosableFileFilter(filter);
 			        int returnVal = fileChooser.showSaveDialog(frame);
 			        
@@ -2042,6 +2060,7 @@ public class MainFrame extends JFrame {
 
 			}
 		});
+		
 		btnFirmaPin.setBounds(224, 0, 136, 23);
 		panel_28.add(btnFirmaPin);
 		btnFirmaPin.setForeground(Color.WHITE);
@@ -2236,10 +2255,11 @@ public class MainFrame extends JFrame {
 		
 		panel_31 = new JPanel();
 		panel_31.setBackground(Color.WHITE);
-		panel_31.setBounds(52, 392, 349, 23);
+		panel_31.setBounds(0, 392, 449, 23);
 		panel_30.add(panel_31);
 		panel_31.setLayout(null);
 		JButton btnSelectImg = new JButton("Seleziona un file");
+		btnSelectImg.setFont(new Font("Dialog", Font.BOLD, 11));
 		btnSelectImg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -2277,6 +2297,8 @@ public class MainFrame extends JFrame {
 					    Gson gson = new Gson();
 						String serialDictionary = gson.toJson(cieDictionary);
 						Utils.setProperty("cieDictionary", serialDictionary);	
+						
+						btnCreaFirma.setEnabled(true);
 
 			        } catch (IOException er) {
 			            er.printStackTrace();
@@ -2288,7 +2310,7 @@ public class MainFrame extends JFrame {
 			    
 			}
 		});
-		btnSelectImg.setBounds(197, 0, 152, 23);
+		btnSelectImg.setBounds(149, 0, 151, 23);
 		panel_31.add(btnSelectImg);
 		btnSelectImg.setForeground(Color.WHITE);
 		btnSelectImg.setBackground(new Color(30, 144, 255));
@@ -2299,14 +2321,66 @@ public class MainFrame extends JFrame {
 				tabbedPane.setSelectedIndex(10);
 			}
 		});
-		btnAnnullaOp_6.setBounds(0, 0, 152, 23);
+		btnAnnullaOp_6.setBounds(0, 0, 137, 23);
 		panel_31.add(btnAnnullaOp_6);
 		btnAnnullaOp_6.setForeground(Color.WHITE);
 		btnAnnullaOp_6.setBackground(new Color(30, 144, 255));
 		
+		btnCreaFirma = new JButton("Crea firma");
+		btnCreaFirma.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				CieCard selectedCie = getSelectedCIE();
+				
+			    String signImagePath = getSignImagePath(selectedCie.getCard().getSerialNumber());
+			    drawText(selectedCie.getCard().getName(), signImagePath);
+			    Image signImage;
+			    
+				try {
+					
+					if(!Files.exists(Paths.get(signImagePath)))
+					{
+					    drawText(selectedCie.getCard().getName(), signImagePath);
+					}
+					
+					signImage = ImageIO.read(new File(signImagePath));
+				    ImageIcon imageIcon = new ImageIcon();
+				    
+				    imageIcon.setImage(signImage.getScaledInstance(lblFirmaPersonalizzata.getWidth(), lblFirmaPersonalizzata.getHeight(), Image.SCALE_SMOOTH));
+				    lblFirmaPersonalizzata.setIcon(imageIcon);
+				    
+				    selectedCie.getCard().setIsCustomSign(false);
+				    
+				    cieDictionary.put(selectedCie.getCard().getPan(), selectedCie.getCard());
+				    
+				    Gson gson = new Gson();
+					String serialDictionary = gson.toJson(cieDictionary);
+					Utils.setProperty("cieDictionary", serialDictionary);
+					
+					lblPersonalizza.setText("Personalizza");
+					lblHint.setText("Abbiamo creato per te una firma grafica, ma se preferisci puo personalizzarla. "
+							+ "Questo passaggio non è indispensabile, ma ti consentirà di dare un tocco personale ai documenti firmati.");
+					lblSFP.setVisible(true);
+					lblFPOK.setVisible(false);
+				    
+				} catch (IOException e1) {
+
+				    lblFirmaPersonalizzata.setText("Immagine firma personalizzata non trovata");
+					tabbedPane.setSelectedIndex(15);
+				}
+			    
+			    btnCreaFirma.setEnabled(false);
+				
+			}
+		});
+		btnCreaFirma.setForeground(Color.WHITE);
+		btnCreaFirma.setBackground(new Color(30, 144, 255));
+		btnCreaFirma.setBounds(312, -1, 137, 23);
+		panel_31.add(btnCreaFirma);
+		
 		lblHint = new JTextArea();
 		lblHint.setHighlighter(null);
-		lblHint.setBounds(0, 133, 439, 80);
+		lblHint.setBounds(0, 133, 449, 80);
 		panel_30.add(lblHint);
 		lblHint.setWrapStyleWord(true);
 		lblHint.setText("Abbiamo creato per te una firma grafica, ma se preferisci puoi personalizzarla. Questo passaggio non \u00E8 indispensabile, ma ti consentir\u00E0 di dare un tocco personale ai documenti firmati.");
@@ -2318,7 +2392,7 @@ public class MainFrame extends JFrame {
 		
 		JTextArea txtrAbbiamoCreatoPer_1_1 = new JTextArea();
 		txtrAbbiamoCreatoPer_1_1.setHighlighter(null);
-		txtrAbbiamoCreatoPer_1_1.setBounds(0, 280, 439, 72);
+		txtrAbbiamoCreatoPer_1_1.setBounds(0, 280, 449, 72);
 		panel_30.add(txtrAbbiamoCreatoPer_1_1);
 		txtrAbbiamoCreatoPer_1_1.setWrapStyleWord(true);
 		txtrAbbiamoCreatoPer_1_1.setText("Puoi caricare un file in formato PNG, se non hai un file contenente una firma grafica puoi realizzarne uno utilizzando l'app CieSign disponibile per smartphone iOS o Android");
