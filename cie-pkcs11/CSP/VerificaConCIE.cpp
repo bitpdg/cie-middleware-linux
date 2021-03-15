@@ -18,11 +18,11 @@ extern "C" {
 }
 
 
-CK_RV CK_ENTRY verificaConCIE(const char* inFilePath)
+CK_RV CK_ENTRY verificaConCIE( const char* inFilePath, const char* proxyAddress, int proxyPort, const char* usrPass)
 {
     CIEVerify* verifier = new CIEVerify();
 
-    verifier->verify(inFilePath, (VERIFY_RESULT*)&verifyResult);
+    verifier->verify(inFilePath, (VERIFY_RESULT*)&verifyResult, proxyAddress, proxyPort, usrPass);
 
     if (verifyResult.nErrorCode == 0)
     {

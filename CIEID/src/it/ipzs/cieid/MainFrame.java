@@ -65,6 +65,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
@@ -288,6 +290,17 @@ public class MainFrame extends JFrame {
 	private JTextArea lblPathVerifica;
 	private JButton btnProseguiOp;
 	private JButton btnCreaFirma;
+	private JPanel Impostazioni;
+	private JLabel lblConfigProxy;
+	private JPanel panel_33;
+	private JButton btnSalva;
+	private JLabel lblNewLabel_14;
+	private JTextField txtProxyAddr;
+	private JTextField txtUsername;
+	private JPasswordField txtPassword;
+	private JTextField txtPorta;
+	private JButton btnImpostazioni;
+	
 	private enum SignOp
 	{
 		OP_NONE,
@@ -371,7 +384,7 @@ public class MainFrame extends JFrame {
 		btnCambiaPin.setHorizontalAlignment(SwingConstants.LEFT);
 		btnCambiaPin.setBorderPainted(false);
 		btnCambiaPin.setBackground(SystemColor.control);
-		btnCambiaPin.setBounds(0, 244, 200, 45);
+		btnCambiaPin.setBounds(0, 221, 200, 45);
 		leftPanel.add(btnCambiaPin);
 		
 		btnSbloccaCarta = new JButton("   Sblocca Carta");
@@ -388,7 +401,7 @@ public class MainFrame extends JFrame {
 		btnSbloccaCarta.setHorizontalAlignment(SwingConstants.LEFT);
 		btnSbloccaCarta.setBorderPainted(false);
 		btnSbloccaCarta.setBackground(SystemColor.control);
-		btnSbloccaCarta.setBounds(0, 304, 200, 45);
+		btnSbloccaCarta.setBounds(0, 267, 200, 45);
 		leftPanel.add(btnSbloccaCarta);
 		
 		btnTutorial = new JButton("   Tutorial");
@@ -402,7 +415,7 @@ public class MainFrame extends JFrame {
 		btnTutorial.setHorizontalAlignment(SwingConstants.LEFT);
 		btnTutorial.setBorderPainted(false);
 		btnTutorial.setBackground(SystemColor.window);
-		btnTutorial.setBounds(0, 364, 200, 45);
+		btnTutorial.setBounds(0, 313, 200, 45);
 		leftPanel.add(btnTutorial);
 		
 		btnAiuto = new JButton("   Aiuto");
@@ -416,7 +429,7 @@ public class MainFrame extends JFrame {
 		btnAiuto.setHorizontalAlignment(SwingConstants.LEFT);
 		btnAiuto.setBorderPainted(false);
 		btnAiuto.setBackground(SystemColor.control);
-		btnAiuto.setBounds(0, 424, 200, 45);
+		btnAiuto.setBounds(0, 359, 200, 45);
 		leftPanel.add(btnAiuto);
 		
 		btnInformazioni = new JButton("   Informazioni");
@@ -430,7 +443,7 @@ public class MainFrame extends JFrame {
 		btnInformazioni.setHorizontalAlignment(SwingConstants.LEFT);
 		btnInformazioni.setBorderPainted(false);
 		btnInformazioni.setBackground(SystemColor.control);
-		btnInformazioni.setBounds(0, 484, 200, 45);
+		btnInformazioni.setBounds(0, 405, 200, 45);
 		leftPanel.add(btnInformazioni);
 		
 		btnFirma = new JButton("   Firma Elettronica");
@@ -482,8 +495,24 @@ public class MainFrame extends JFrame {
 		btnFirma.setHorizontalAlignment(SwingConstants.LEFT);
 		btnFirma.setBorderPainted(false);
 		btnFirma.setBackground(SystemColor.menu);
-		btnFirma.setBounds(0, 188, 200, 45);
+		btnFirma.setBounds(0, 176, 200, 45);
 		leftPanel.add(btnFirma);
+		
+		btnImpostazioni = new JButton("   Impostazioni");
+		btnImpostazioni.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				selectButton(btnImpostazioni);
+				tabbedPane.setSelectedIndex(17);
+				
+			}
+		});
+		btnImpostazioni.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/settings_icon.png")));
+		btnImpostazioni.setHorizontalAlignment(SwingConstants.LEFT);
+		btnImpostazioni.setBorderPainted(false);
+		btnImpostazioni.setBackground(SystemColor.window);
+		btnImpostazioni.setBounds(0, 451, 200, 45);
+		leftPanel.add(btnImpostazioni);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(200, -65, 600, 635);
@@ -2469,6 +2498,95 @@ public class MainFrame extends JFrame {
 		lblNewLabel_13.setBounds(190, 82, 246, 15);
 		verifica.add(lblNewLabel_13);
 		
+		Impostazioni = new JPanel();
+		Impostazioni.setLayout(null);
+		Impostazioni.setBackground(Color.WHITE);
+		tabbedPane.addTab("New tab", null, Impostazioni, null);
+		
+		lblConfigProxy = new JLabel("Configurazione server Proxy");
+		lblConfigProxy.setHorizontalAlignment(SwingConstants.CENTER);
+		lblConfigProxy.setFont(new Font("Dialog", Font.BOLD, 28));
+		lblConfigProxy.setBounds(65, 45, 471, 39);
+		Impostazioni.add(lblConfigProxy);
+		
+		panel_33 = new JPanel();
+		panel_33.setLayout(null);
+		panel_33.setBackground(Color.WHITE);
+		panel_33.setBounds(76, 132, 449, 415);
+		Impostazioni.add(panel_33);
+		
+		btnSalva = new JButton("Salva");
+		btnSalva.setForeground(Color.WHITE);
+		btnSalva.setBackground(new Color(30, 144, 255));
+		btnSalva.setBounds(45, 392, 136, 23);
+		panel_33.add(btnSalva);
+		
+		JButton btnConcludiVerifica_1_1 = new JButton("Modifica");
+		btnConcludiVerifica_1_1.setForeground(Color.WHITE);
+		btnConcludiVerifica_1_1.setBackground(new Color(30, 144, 255));
+		btnConcludiVerifica_1_1.setBounds(271, 391, 136, 23);
+		panel_33.add(btnConcludiVerifica_1_1);
+		
+		JLabel lblProxyAddr = new JLabel("Indirizzo (URL o indirizzo IP)");
+		lblProxyAddr.setHorizontalAlignment(SwingConstants.LEFT);
+		lblProxyAddr.setFont(new Font("Dialog", Font.PLAIN, 14));
+		lblProxyAddr.setBounds(62, 95, 215, 23);
+		panel_33.add(lblProxyAddr);
+		
+		txtProxyAddr = new JTextField();
+		txtProxyAddr.setBounds(62, 124, 234, 25);
+		panel_33.add(txtProxyAddr);
+		
+		JLabel lblUsername = new JLabel("Username");
+		lblUsername.setHorizontalAlignment(SwingConstants.LEFT);
+		lblUsername.setFont(new Font("Dialog", Font.PLAIN, 14));
+		lblUsername.setBounds(62, 160, 299, 36);
+		panel_33.add(lblUsername);
+		
+		txtUsername = new JTextField();
+		txtUsername.setBounds(62, 189, 234, 25);
+		panel_33.add(txtUsername);
+		
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPassword.setFont(new Font("Dialog", Font.PLAIN, 14));
+		lblPassword.setBounds(62, 226, 299, 36);
+		panel_33.add(lblPassword);
+		
+		txtPassword = new JPasswordField();
+		txtPassword.setBounds(62, 255, 234, 25);
+		panel_33.add(txtPassword);
+		
+		txtPorta = new JTextField();
+		
+		txtPorta.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar())) {
+                 JCheckBox cbShowPsw = new JCheckBox("Mostra password");
+		cbShowPsw.setBackground(Color.WHITE);
+		cbShowPsw.setFont(new Font("Dialog", Font.BOLD, 10));
+		cbShowPsw.setBounds(312, 256, 129, 23);
+		panel_33.add(cbShowPsw);
+		
+		   evt.consume();
+                }
+            }
+        });
+		
+		txtPorta.setBounds(340, 124, 49, 25);
+		panel_33.add(txtPorta);
+		
+		JLabel lblPorta = new JLabel("Porta");
+		lblPorta.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPorta.setFont(new Font("Dialog", Font.PLAIN, 14));
+		lblPorta.setBounds(340, 95, 58, 23);
+		panel_33.add(lblPorta);
+		
+		lblNewLabel_14 = new JLabel("Inserisci l'indirizzo del server proxy ed eventuali credenziali");
+		lblNewLabel_14.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblNewLabel_14.setBounds(70, 82, 493, 15);
+		Impostazioni.add(lblNewLabel_14);
+		
 		if(args.length > 0 && args[0].equals("unlock"))
 		{
 			selectUnlock();
@@ -2488,6 +2606,7 @@ public class MainFrame extends JFrame {
 		btnSbloccaCarta.setBackground(SystemColor.control);
 		btnTutorial.setBackground(SystemColor.control);
 		btnFirma.setBackground(SystemColor.control);
+		btnImpostazioni.setBackground(SystemColor.control);
 		
 		button.setBackground(SystemColor.LIGHT_GRAY);
 		
