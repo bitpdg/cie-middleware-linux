@@ -12,7 +12,7 @@
 VERIFY_RESULT verifyResult;
 
 extern "C" {
-    CK_RV CK_ENTRY verificaConCIE(const char* inFilePath);
+    CK_RV CK_ENTRY verificaConCIE( const char* inFilePath, const char* proxyAddress, int proxyPort, const char* usrPass);
     CK_RV CK_ENTRY getNumberOfSign(void);
     CK_RV CK_ENTRY getVerifyInfo(int index, struct verifyInfo_t* vInfos);
 }

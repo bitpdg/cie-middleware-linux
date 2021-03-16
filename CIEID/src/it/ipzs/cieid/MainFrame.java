@@ -300,6 +300,8 @@ public class MainFrame extends JFrame {
 	private JPasswordField txtPassword;
 	private JTextField txtPorta;
 	private JButton btnImpostazioni;
+	private JButton btnModificaProxy;
+	private JCheckBox chckbxMostraPassword;
 	
 	private enum SignOp
 	{
@@ -501,6 +503,51 @@ public class MainFrame extends JFrame {
 		btnImpostazioni = new JButton("   Impostazioni");
 		btnImpostazioni.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				btnModificaProxy.setEnabled(false);
+				
+				if(Utils.getProperty("proxyURL", "").equals(""))
+				{
+					txtProxyAddr.setEnabled(true);
+					txtUsername.setEnabled(true);
+					txtPassword.setEnabled(true);
+					txtPorta.setEnabled(true);
+					chckbxMostraPassword.setEnabled(true);
+					chckbxMostraPassword.setSelected(false);
+					btnSalva.setEnabled(true);
+					btnModificaProxy.setEnabled(false);					
+				}else
+				{
+					if(Utils.getProperty("credentials", "").equals(""))
+					{
+						txtPassword.setText("");
+						txtUsername.setText("");
+					}else
+					{
+						String encryptedCredentials = Utils.getProperty("credentials", "");
+						ProxyInfoManager proxyInfoManager = new ProxyInfoManager();
+						String credentials = proxyInfoManager.decrypt(encryptedCredentials);
+						System.out.println("Credentials -> " + credentials);
+						if(credentials.substring(0, 5).equals("cred="))
+						{
+							String[] infos = credentials.substring(5).split(":");
+							txtUsername.setText(infos[0]);
+							txtPassword.setText(infos[1]);
+						}
+					}
+				}
+				
+				txtProxyAddr.setText(Utils.getProperty("proxyURL", ""));
+				txtPorta.setText(Utils.getProperty("proxyPort", ""));
+				
+				txtProxyAddr.setEnabled(false);
+				txtUsername.setEnabled(false);
+				txtPassword.setEnabled(false);
+				txtPorta.setEnabled(false);
+				chckbxMostraPassword.setEnabled(false);
+				chckbxMostraPassword.setSelected(false);
+				btnSalva.setEnabled(false);
+				btnModificaProxy.setEnabled(true);	
 				
 				selectButton(btnImpostazioni);
 				tabbedPane.setSelectedIndex(17);
@@ -1493,8 +1540,30 @@ public class MainFrame extends JFrame {
 				
 				@Override
 				public void run() {
-						
-					final long ret = Middleware.INSTANCE.verificaConCIE(filePath);
+					
+		            String proxyAddress = null;
+		            String proxyCredentials = null;
+		            int proxyPort = -1;
+					
+					if(!Utils.getProperty("proxyURL", "").equals(""))
+					{
+						proxyAddress = Utils.getProperty("proxyURL", "");
+						proxyPort = Integer.parseInt(Utils.getProperty("proxyPort", ""));
+						if(!Utils.getProperty("credentials", "").equals(""))
+						{
+							String encryptedCredentials = Utils.getProperty("credentials", "");
+							ProxyInfoManager proxyInfoManager = new ProxyInfoManager();
+							String credentials = proxyInfoManager.decrypt(encryptedCredentials);
+							if(credentials.substring(0, 5).equals("cred="))
+							{
+								proxyCredentials = credentials.substring(5);
+							}
+						}
+					}
+					
+					System.out.printf("Verifica con CIE - Url: %s, Port: %s, credentials: %s", proxyAddress, proxyPort, proxyCredentials);
+					
+					final long ret = Middleware.INSTANCE.verificaConCIE(filePath, proxyAddress, proxyPort, proxyCredentials);
 					
 					if(ret == 0)
 					{
@@ -2516,16 +2585,79 @@ public class MainFrame extends JFrame {
 		Impostazioni.add(panel_33);
 		
 		btnSalva = new JButton("Salva");
+		btnSalva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				if((txtUsername.getText().equals("") && !txtPassword.getText().equals("")) || (!txtUsername.getText().equals("") && txtPassword.getText().equals("")))
+				{
+					JOptionPane.showMessageDialog(btnSalva.getParent(), "Campo username o password mancante", "Credenziali proxy mancanti", JOptionPane.ERROR_MESSAGE);
+		            return;
+				}
+				
+				if((txtPorta.getText().equals("") && !txtProxyAddr.getText().equals("")) || (!txtPorta.getText().equals("") && txtProxyAddr.getText().equals("")) )
+				{
+					JOptionPane.showMessageDialog(btnSalva.getParent(), "Indirizzo o porta del proxy mancante", "Informazione proxy mancanti", JOptionPane.ERROR_MESSAGE);
+		            return;
+				}
+				
+				
+				if(txtUsername.getText().equals(""))
+				{
+                	Utils.setProperty("credentials", "");	
+				}else
+				{
+					String credentials = String.format("cred=%s:%s", txtUsername.getText(), txtPassword.getText());
+					System.out.println(txtPassword.getPassword());
+					System.out.println("Credentials: "+ credentials);
+					ProxyInfoManager proxyInfoManager = new ProxyInfoManager();
+					String encryptedCredentials = proxyInfoManager.encrypt(credentials);
+				    Utils.setProperty("credentials", encryptedCredentials);
+				}
+				
+				Utils.setProperty("proxyURL", txtProxyAddr.getText());
+				
+				if(txtPorta.getText() == "")
+				{
+					Utils.setProperty("proxyPort", String.valueOf(0));
+				}else
+				{
+					Utils.setProperty("proxyPort", txtPorta.getText());
+				}
+				
+				txtProxyAddr.setEnabled(false);
+				txtUsername.setEnabled(false);
+				txtPassword.setEnabled(false);
+				txtPorta.setEnabled(false);
+				chckbxMostraPassword.setEnabled(false);
+				chckbxMostraPassword.setSelected(false);
+				btnSalva.setEnabled(false);
+				btnModificaProxy.setEnabled(true);	
+			}
+			
+		});
+		
 		btnSalva.setForeground(Color.WHITE);
 		btnSalva.setBackground(new Color(30, 144, 255));
 		btnSalva.setBounds(45, 392, 136, 23);
 		panel_33.add(btnSalva);
 		
-		JButton btnConcludiVerifica_1_1 = new JButton("Modifica");
-		btnConcludiVerifica_1_1.setForeground(Color.WHITE);
-		btnConcludiVerifica_1_1.setBackground(new Color(30, 144, 255));
-		btnConcludiVerifica_1_1.setBounds(271, 391, 136, 23);
-		panel_33.add(btnConcludiVerifica_1_1);
+		btnModificaProxy = new JButton("Modifica");
+		btnModificaProxy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtProxyAddr.setEnabled(true);
+				txtUsername.setEnabled(true);
+				txtPassword.setEnabled(true);
+				txtPorta.setEnabled(true);
+				chckbxMostraPassword.setEnabled(true);
+				chckbxMostraPassword.setSelected(false);
+				btnSalva.setEnabled(true);
+				btnModificaProxy.setEnabled(false);	
+			}
+		});
+		btnModificaProxy.setForeground(Color.WHITE);
+		btnModificaProxy.setBackground(new Color(30, 144, 255));
+		btnModificaProxy.setBounds(271, 391, 136, 23);
+		panel_33.add(btnModificaProxy);
 		
 		JLabel lblProxyAddr = new JLabel("Indirizzo (URL o indirizzo IP)");
 		lblProxyAddr.setHorizontalAlignment(SwingConstants.LEFT);
@@ -2562,17 +2694,12 @@ public class MainFrame extends JFrame {
 		txtPorta.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar())) {
-                 JCheckBox cbShowPsw = new JCheckBox("Mostra password");
-		cbShowPsw.setBackground(Color.WHITE);
-		cbShowPsw.setFont(new Font("Dialog", Font.BOLD, 10));
-		cbShowPsw.setBounds(312, 256, 129, 23);
-		panel_33.add(cbShowPsw);
-		
-		   evt.consume();
+                    evt.consume();
                 }
             }
         });
 		
+
 		txtPorta.setBounds(340, 124, 49, 25);
 		panel_33.add(txtPorta);
 		
@@ -2581,6 +2708,22 @@ public class MainFrame extends JFrame {
 		lblPorta.setFont(new Font("Dialog", Font.PLAIN, 14));
 		lblPorta.setBounds(340, 95, 58, 23);
 		panel_33.add(lblPorta);
+		
+		chckbxMostraPassword = new JCheckBox("Mostra password");
+		chckbxMostraPassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(chckbxMostraPassword.isSelected())
+				{
+					txtPassword.setEchoChar((char)0);
+				}else {
+					txtPassword.setEchoChar('*');
+				}
+			}
+		});
+		chckbxMostraPassword.setFont(new Font("Dialog", Font.BOLD, 10));
+		chckbxMostraPassword.setBackground(Color.WHITE);
+		chckbxMostraPassword.setBounds(304, 256, 129, 23);
+		panel_33.add(chckbxMostraPassword);
 		
 		lblNewLabel_14 = new JLabel("Inserisci l'indirizzo del server proxy ed eventuali credenziali");
 		lblNewLabel_14.setFont(new Font("Dialog", Font.BOLD, 15));

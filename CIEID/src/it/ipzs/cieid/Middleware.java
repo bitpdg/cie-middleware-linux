@@ -108,8 +108,8 @@ public interface Middleware extends Library {
 	public int DisabilitaCIE(String szPAN);
 	public int CambioPIN(String  currentPIN, String nuovoPIN, int[] attempts, ProgressCallBack progressCallBack);
 	public int SbloccoPIN(String puk, String nuovoPIN, int[] attempts, ProgressCallBack progressCallBack);
-    public int verificaConCIE(String inFilePath);
-    //public int verificaConCIE(String inFilePath, String proxyAddress, int proxyPort, String usrPass);
+    //public int verificaConCIE(String inFilePath);
+    public int verificaConCIE(String inFilePath, String proxyAddress, int proxyPort, String usrPass);
     public int getNumberOfSign();
     public int getVerifyInfo(int index, verifyInfo vInfo);
 }

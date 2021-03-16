@@ -1,8 +1,15 @@
 package it.ipzs.cieid.Firma;
 
 import java.awt.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import javax.swing.*;
@@ -39,7 +46,12 @@ public class VerifyTable {
     	
     	if(s_time != null)
     	{
-    		//parsing
+    		String signingTime = s_time.substring(0, 12);
+    		    		
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss", Locale.ITALY);
+    		LocalDateTime dateTime = LocalDateTime.parse(signingTime, formatter);
+    		DateTimeFormatter formatterOut = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss", Locale.ITALY);    		
+    		s_time = dateTime.format(formatterOut);
     	}else {
 
     		s_time = "Attributo Signing Time non presente";
