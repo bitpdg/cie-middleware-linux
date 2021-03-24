@@ -549,7 +549,7 @@ public class FileDrop
     private static void log( java.io.PrintStream out, String message )
     {   // Log message if requested
         if( out != null )
-            out.println( message );
+            System.out.println( message );
     }   // end log
 
     

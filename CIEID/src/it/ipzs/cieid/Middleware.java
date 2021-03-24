@@ -10,11 +10,11 @@ import com.sun.jna.Native;
 import com.sun.jna.Structure;
 
 public interface Middleware extends Library {
-	//Middleware INSTANCE = (Middleware) Native.loadLibrary("cie-pkcs11", Middleware.class);
+	Middleware INSTANCE = (Middleware) Native.loadLibrary("cie-pkcs11", Middleware.class);
 	public static final int MAX_LEN=256;
 	public static final int MAX_INFO=20;
 	
-	Middleware INSTANCE = (Middleware) Native.loadLibrary("/home/piero/Desktop/IPZS/cie-middleware-linux/Debug/libcie-pkcs11.so", Middleware.class);
+	
 	
 	interface ProgressCallBack extends Callback {
         void invoke(int progress, String message);

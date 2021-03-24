@@ -15,8 +15,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -515,7 +518,10 @@ public class MainFrame extends JFrame {
 					chckbxMostraPassword.setEnabled(true);
 					chckbxMostraPassword.setSelected(false);
 					btnSalva.setEnabled(true);
-					btnModificaProxy.setEnabled(false);					
+					btnModificaProxy.setEnabled(false);			
+					
+					selectButton(btnImpostazioni);
+					tabbedPane.setSelectedIndex(17);
 				}else
 				{
 					if(Utils.getProperty("credentials", "").equals(""))
@@ -535,23 +541,22 @@ public class MainFrame extends JFrame {
 							txtPassword.setText(infos[1]);
 						}
 					}
+					
+					txtProxyAddr.setText(Utils.getProperty("proxyURL", ""));
+					txtPorta.setText(Utils.getProperty("proxyPort", ""));
+					
+					txtProxyAddr.setEnabled(false);
+					txtUsername.setEnabled(false);
+					txtPassword.setEnabled(false);
+					txtPorta.setEnabled(false);
+					chckbxMostraPassword.setEnabled(false);
+					chckbxMostraPassword.setSelected(false);
+					btnSalva.setEnabled(false);
+					btnModificaProxy.setEnabled(true);	
+					
+					selectButton(btnImpostazioni);
+					tabbedPane.setSelectedIndex(17);
 				}
-				
-				txtProxyAddr.setText(Utils.getProperty("proxyURL", ""));
-				txtPorta.setText(Utils.getProperty("proxyPort", ""));
-				
-				txtProxyAddr.setEnabled(false);
-				txtUsername.setEnabled(false);
-				txtPassword.setEnabled(false);
-				txtPorta.setEnabled(false);
-				chckbxMostraPassword.setEnabled(false);
-				chckbxMostraPassword.setSelected(false);
-				btnSalva.setEnabled(false);
-				btnModificaProxy.setEnabled(true);	
-				
-				selectButton(btnImpostazioni);
-				tabbedPane.setSelectedIndex(17);
-				
 			}
 		});
 		btnImpostazioni.setIcon(new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/settings_icon.png")));
@@ -1447,7 +1452,7 @@ public class MainFrame extends JFrame {
 					}
 					
 				} catch (IOException e1) {
-
+					System.out.println(e1);
 				    lblFirmaPersonalizzata.setText("Immagine firma personalizzata non trovata");
 					tabbedPane.setSelectedIndex(15);
 				}
@@ -2607,8 +2612,6 @@ public class MainFrame extends JFrame {
 				}else
 				{
 					String credentials = String.format("cred=%s:%s", txtUsername.getText(), txtPassword.getText());
-					System.out.println(txtPassword.getPassword());
-					System.out.println("Credentials: "+ credentials);
 					ProxyInfoManager proxyInfoManager = new ProxyInfoManager();
 					String encryptedCredentials = proxyInfoManager.encrypt(credentials);
 				    Utils.setProperty("credentials", encryptedCredentials);
@@ -2764,7 +2767,7 @@ public class MainFrame extends JFrame {
 	{
 		String home = System.getProperty("user.home");
 		String signPath = home + "/.CIEPKI/" + serialNumber+"_default.png";
-		
+		System.out.println("Image path " + signPath);
 		return signPath;
 	}
 
@@ -2789,10 +2792,46 @@ public class MainFrame extends JFrame {
 		try {
 
 		    text = toFirstCharUpperAll(toTitleCase(text).toLowerCase());
-			File file = new File(MainFrame.class.getResource("/it/ipzs/cieid/res/Allura-Regular.ttf").getFile());
+		    
+		    /*
+		    System.out.println(MainFrame.class.getResource("/it/ipzs/cieid/res/Allura-Regular.ttf").toExternalForm());
+			File file = new File(MainFrame.class.getResource("/it/ipzs/cieid/res/Allura-Regular.ttf").toExternalForm());
+		    //File file = new File("/usr/share/CIEID/cieid.jar/it/ipzs/cieid/res/Allura-Regular.ttf");
 			InputStream is = new FileInputStream(file);
+		     */
 
-			Font customFont = Font.createFont(Font.TRUETYPE_FONT, is); 
+		    
+		    File file = null;
+		    String resource = "/it/ipzs/cieid/res/Allura-Regular.ttf";
+		    URL res = getClass().getResource(resource);
+		    if (res.getProtocol().equals("jar")) {
+		        try {
+		            InputStream input = getClass().getResourceAsStream(resource);
+		            file = File.createTempFile("tempfile", ".tmp");
+		            OutputStream out = new FileOutputStream(file);
+		            int read;
+		            byte[] bytes = new byte[1024];
+
+		            while ((read = input.read(bytes)) != -1) {
+		                out.write(bytes, 0, read);
+		            }
+		            out.close();
+		            file.deleteOnExit();
+		        } catch (IOException ex) {
+		            ex.printStackTrace();
+		        }
+		    } else {
+		        //this will probably work in your IDE, but not from a JAR
+		        file = new File(res.getFile());
+		    }
+
+		    if (file != null && !file.exists()) {
+		        throw new RuntimeException("Error: File " + file + " not found!");
+		    }
+		    
+		    
+		    InputStream is = new FileInputStream(file);
+		    Font customFont = Font.createFont(Font.TRUETYPE_FONT, is); 
 		    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		    //register the font
 		    ge.registerFont(customFont);
