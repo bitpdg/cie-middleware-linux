@@ -282,9 +282,15 @@ void IAS::ReadCIEType() {
 	if (ATR.indexOf(baNXP_ATR,position))
 		type = CIE_Type::CIE_NXP;
 	else if (ATR.indexOf(baGemalto_ATR, position))
+	{
+		printf("%s\n", "CIE Gemalto");
 		type = CIE_Type::CIE_Gemalto;
+	}
 	else if (ATR.indexOf(baGemalto2_ATR, position))
+	{
+		printf("%s", "CIE Gemalto");
 		type = CIE_Type::CIE_Gemalto;
+	}
     else if (ATR.indexOf(baSTM_ATR, position))
             type = CIE_Type::CIE_STM;
     else if (ATR.indexOf(baSTM2_ATR, position))
@@ -292,7 +298,10 @@ void IAS::ReadCIEType() {
     else if (ATR.indexOf(baSTM3_ATR, position))
             type = CIE_Type::CIE_STM3;
 	else
+	{
+		printf("%s", "CIE non riconosciuta");
 		throw logged_error("CIE non riconosciuta");
+	}
 }
 
 
@@ -319,7 +328,7 @@ void IAS::SelectAID_IAS(bool SM) {
                 throw scard_error(sw);
         }
     }
-    else if (type == CIE_Type::CIE_NXP || type == CIE_Type::CIE_STM || type == CIE_Type::CIE_STM2 || type == CIE_Type::CIE_STM3)
+    else if (type == CIE_Type::CIE_Gemalto  || type == CIE_Type::CIE_STM || type == CIE_Type::CIE_STM2 || type == CIE_Type::CIE_STM3)
     {
         uint8_t selectIAS[] = { 0x00, 0xa4, 0x04, 0x0c };
         if (SM)
