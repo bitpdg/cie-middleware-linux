@@ -31,15 +31,16 @@ public interface Middleware extends Library {
 
 	public static class verifyInfo extends Structure{
 		public static class ByReference extends verifyInfo implements Structure.ByReference { };
-		
+
+
 		public byte[] name = new byte[Middleware.MAX_LEN * 2];
 		public byte[] surname = new byte[Middleware.MAX_LEN * 2];
 		public byte[] cn = new byte[Middleware.MAX_LEN * 2];
 		public byte[] signingTime = new byte[Middleware.MAX_LEN * 2];
 		public byte[] cadn = new byte[Middleware.MAX_LEN * 2];
-		public int CertRevocStatus;
-		public Boolean isSignValid;
-		public Boolean isCertValid;
+		public int CertRevocStatus;		
+		public byte isSignValid;
+		public byte isCertValid;
 		
 		@Override
 		protected List<String> getFieldOrder() {
@@ -108,9 +109,9 @@ public interface Middleware extends Library {
 	public int DisabilitaCIE(String szPAN);
 	public int CambioPIN(String  currentPIN, String nuovoPIN, int[] attempts, ProgressCallBack progressCallBack);
 	public int SbloccoPIN(String puk, String nuovoPIN, int[] attempts, ProgressCallBack progressCallBack);
-    //public int verificaConCIE(String inFilePath);
     public int verificaConCIE(String inFilePath, String proxyAddress, int proxyPort, String usrPass);
     public int getNumberOfSign();
     public int getVerifyInfo(int index, verifyInfo vInfo);
+    public int estraiP7m(String inFilePath, String outFilePath);
 }
 

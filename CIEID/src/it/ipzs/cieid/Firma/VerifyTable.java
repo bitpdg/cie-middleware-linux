@@ -59,15 +59,15 @@ public class VerifyTable {
     	
         String s_cert = "Il certificato non è valido";
         Icon certIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/orange_checkbox.png"));
-        if (vInfo.isCertValid == true) 
+        if (vInfo.isCertValid == 1) 
         {
             s_cert = "Il certificato è valido";
-            certIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/green_box.png"));
+            certIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/green_checkbox.png"));
         }
     	
         String s_sign = "La firma non è valida";
         Icon signIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/orange_checkbox.png"));
-        if (vInfo.isSignValid == true)
+        if (vInfo.isSignValid == 1)
         {
             s_sign = "La firma è valida";
             signIcon = new ImageIcon(MainFrame.class.getResource("/it/ipzs/cieid/res/Firma/green_checkbox.png"));
